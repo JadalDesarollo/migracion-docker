@@ -1,0 +1,120 @@
+2024-02-02 21:29:39,916:DEBUG:certbot._internal.main:certbot version: 2.8.0
+2024-02-02 21:29:39,916:DEBUG:certbot._internal.main:Location of certbot entry point: /usr/local/bin/certbot
+2024-02-02 21:29:39,916:DEBUG:certbot._internal.main:Arguments: ['--webroot', '--webroot-path=/usr/share/nginx/html/letsencrypt', '--email', 'desarrollo.jadalsoftware@gmail.com', '--agree-tos', '--no-eff-email', '-d', 'migracion.jadal.pe']
+2024-02-02 21:29:39,917:DEBUG:certbot._internal.main:Discovered plugins: PluginsRegistry(PluginEntryPoint#manual,PluginEntryPoint#null,PluginEntryPoint#standalone,PluginEntryPoint#webroot)
+2024-02-02 21:29:39,942:DEBUG:certbot._internal.log:Root logging level set at 30
+2024-02-02 21:29:39,942:DEBUG:certbot._internal.plugins.selection:Requested authenticator webroot and installer None
+2024-02-02 21:29:39,943:DEBUG:certbot._internal.plugins.selection:Single candidate plugin: * webroot
+Description: Saves the necessary validation files to a .well-known/acme-challenge/ directory within the nominated webroot path. A seperate HTTP server must be running and serving files from the webroot path. HTTP challenge only (wildcards not supported).
+Interfaces: Authenticator, Plugin
+Entry point: EntryPoint(name='webroot', value='certbot._internal.plugins.webroot:Authenticator', group='certbot.plugins')
+Initialized: <certbot._internal.plugins.webroot.Authenticator object at 0x7f8751f93730>
+Prep: True
+2024-02-02 21:29:39,943:DEBUG:certbot._internal.plugins.selection:Selected authenticator <certbot._internal.plugins.webroot.Authenticator object at 0x7f8751f93730> and installer None
+2024-02-02 21:29:39,943:INFO:certbot._internal.plugins.selection:Plugins selected: Authenticator webroot, Installer None
+2024-02-02 21:29:40,060:DEBUG:certbot._internal.main:Picked account: <Account(RegistrationResource(body=Registration(key=None, contact=(), agreement=None, status=None, terms_of_service_agreed=None, only_return_existing=None, external_account_binding=None), uri='https://acme-v02.api.letsencrypt.org/acme/acct/1550272667', new_authzr_uri=None, terms_of_service=None), 9b507c65556e201cf96f44fb1f74216d, Meta(creation_dt=datetime.datetime(2024, 2, 2, 17, 5, 57, tzinfo=<UTC>), creation_host='ee38a32c6a85', register_to_eff=None))>
+2024-02-02 21:29:40,060:DEBUG:acme.client:Sending GET request to https://acme-v02.api.letsencrypt.org/directory.
+2024-02-02 21:29:40,063:DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): acme-v02.api.letsencrypt.org:443
+2024-02-02 21:29:40,240:DEBUG:urllib3.connectionpool:https://acme-v02.api.letsencrypt.org:443 "GET /directory HTTP/1.1" 200 752
+2024-02-02 21:29:40,241:DEBUG:acme.client:Received response:
+HTTP 200
+Server: nginx
+Date: Fri, 02 Feb 2024 21:29:40 GMT
+Content-Type: application/json
+Content-Length: 752
+Connection: keep-alive
+Cache-Control: public, max-age=0, no-cache
+X-Frame-Options: DENY
+Strict-Transport-Security: max-age=604800
+
+{
+  "dlKwsU61va4": "https://community.letsencrypt.org/t/adding-random-entries-to-the-directory/33417",
+  "keyChange": "https://acme-v02.api.letsencrypt.org/acme/key-change",
+  "meta": {
+    "caaIdentities": [
+      "letsencrypt.org"
+    ],
+    "termsOfService": "https://letsencrypt.org/documents/LE-SA-v1.3-September-21-2022.pdf",
+    "website": "https://letsencrypt.org"
+  },
+  "newAccount": "https://acme-v02.api.letsencrypt.org/acme/new-acct",
+  "newNonce": "https://acme-v02.api.letsencrypt.org/acme/new-nonce",
+  "newOrder": "https://acme-v02.api.letsencrypt.org/acme/new-order",
+  "renewalInfo": "https://acme-v02.api.letsencrypt.org/draft-ietf-acme-ari-02/renewalInfo/",
+  "revokeCert": "https://acme-v02.api.letsencrypt.org/acme/revoke-cert"
+}
+2024-02-02 21:29:40,242:DEBUG:certbot._internal.display.obj:Notifying user: Requesting a certificate for migracion.jadal.pe
+2024-02-02 21:29:40,258:DEBUG:acme.client:Requesting fresh nonce
+2024-02-02 21:29:40,258:DEBUG:acme.client:Sending HEAD request to https://acme-v02.api.letsencrypt.org/acme/new-nonce.
+2024-02-02 21:29:40,315:DEBUG:urllib3.connectionpool:https://acme-v02.api.letsencrypt.org:443 "HEAD /acme/new-nonce HTTP/1.1" 200 0
+2024-02-02 21:29:40,316:DEBUG:acme.client:Received response:
+HTTP 200
+Server: nginx
+Date: Fri, 02 Feb 2024 21:29:40 GMT
+Connection: keep-alive
+Cache-Control: public, max-age=0, no-cache
+Link: <https://acme-v02.api.letsencrypt.org/directory>;rel="index"
+Replay-Nonce: kRyagOpUF2VoQzSvqhvIzUvId3LilH_aYAiG-gMXlPnNZz7l1sQ
+X-Frame-Options: DENY
+Strict-Transport-Security: max-age=604800
+
+
+2024-02-02 21:29:40,316:DEBUG:acme.client:Storing nonce: kRyagOpUF2VoQzSvqhvIzUvId3LilH_aYAiG-gMXlPnNZz7l1sQ
+2024-02-02 21:29:40,316:DEBUG:acme.client:JWS payload:
+b'{\n  "identifiers": [\n    {\n      "type": "dns",\n      "value": "migracion.jadal.pe"\n    }\n  ]\n}'
+2024-02-02 21:29:40,324:DEBUG:acme.client:Sending POST request to https://acme-v02.api.letsencrypt.org/acme/new-order:
+{
+  "protected": "eyJhbGciOiAiUlMyNTYiLCAia2lkIjogImh0dHBzOi8vYWNtZS12MDIuYXBpLmxldHNlbmNyeXB0Lm9yZy9hY21lL2FjY3QvMTU1MDI3MjY2NyIsICJub25jZSI6ICJrUnlhZ09wVUYyVm9RelN2cWh2SXpVdklkM0xpbEhfYVlBaUctZ01YbFBuTlp6N2wxc1EiLCAidXJsIjogImh0dHBzOi8vYWNtZS12MDIuYXBpLmxldHNlbmNyeXB0Lm9yZy9hY21lL25ldy1vcmRlciJ9",
+  "signature": "AyRq8qeZuPbkSL17kB8Dwf_E9PzR5dHYKWk_V8NcJZhAflx9Cg6gT3fxyW7gl4bXeGx_SIvnMeJBs9IoElco5LwsIgXzH4I5Uuwf4OpG9V8vNat20UjtR1t-8qz232oXQ6ElAdRihpoSWjs6hPSt6xbYxxQc_8XjGvHlQblnGFOclQQECdhh0SGMgNpdtD9q_es8iatVKHP84Ed-fPFuq0WLFLFaPvvt9bz-Nv5Knsg7SWC3Oq6HA1FCMal_IP0fGa8-aYJBNnRkGSNBs_9H0YKPi8QCpgoSDoSyKE_XDY4pAEfzqsF7l3nXaBq_VQ7VdhZlKsrPG69IXve4vND3aQ",
+  "payload": "ewogICJpZGVudGlmaWVycyI6IFsKICAgIHsKICAgICAgInR5cGUiOiAiZG5zIiwKICAgICAgInZhbHVlIjogIm1pZ3JhY2lvbi5qYWRhbC5wZSIKICAgIH0KICBdCn0"
+}
+2024-02-02 21:29:40,406:DEBUG:urllib3.connectionpool:https://acme-v02.api.letsencrypt.org:443 "POST /acme/new-order HTTP/1.1" 429 324
+2024-02-02 21:29:40,407:DEBUG:acme.client:Received response:
+HTTP 429
+Server: nginx
+Date: Fri, 02 Feb 2024 21:29:40 GMT
+Content-Type: application/problem+json
+Content-Length: 324
+Connection: keep-alive
+Boulder-Requester: 1550272667
+Cache-Control: public, max-age=0, no-cache
+Link: <https://acme-v02.api.letsencrypt.org/directory>;rel="index", <https://letsencrypt.org/docs/rate-limits>;rel="help"
+Replay-Nonce: kRyagOpUQjjxJ3KoSTW4Ngz5mTukWLgXZT5w4mM-LKfLv6zU6cg
+Retry-After: 112707
+
+{
+  "type": "urn:ietf:params:acme:error:rateLimited",
+  "detail": "Error creating new order :: too many certificates (5) already issued for this exact set of domains in the last 168 hours: migracion.jadal.pe, retry after 2024-02-04T04:48:07Z: see https://letsencrypt.org/docs/duplicate-certificate-limit/",
+  "status": 429
+}
+2024-02-02 21:29:40,407:DEBUG:certbot._internal.log:Exiting abnormally:
+Traceback (most recent call last):
+  File "/usr/local/bin/certbot", line 33, in <module>
+    sys.exit(load_entry_point('certbot', 'console_scripts', 'certbot')())
+  File "/opt/certbot/src/certbot/certbot/main.py", line 19, in main
+    return internal_main.main(cli_args)
+  File "/opt/certbot/src/certbot/certbot/_internal/main.py", line 1869, in main
+    return config.func(config, plugins)
+  File "/opt/certbot/src/certbot/certbot/_internal/main.py", line 1600, in certonly
+    lineage = _get_and_save_cert(le_client, config, domains, certname, lineage)
+  File "/opt/certbot/src/certbot/certbot/_internal/main.py", line 143, in _get_and_save_cert
+    lineage = le_client.obtain_and_enroll_certificate(domains, certname)
+  File "/opt/certbot/src/certbot/certbot/_internal/client.py", line 517, in obtain_and_enroll_certificate
+    cert, chain, key, _ = self.obtain_certificate(domains)
+  File "/opt/certbot/src/certbot/certbot/_internal/client.py", line 428, in obtain_certificate
+    orderr = self._get_order_and_authorizations(csr.data, self.config.allow_subset_of_names)
+  File "/opt/certbot/src/certbot/certbot/_internal/client.py", line 478, in _get_order_and_authorizations
+    orderr = self.acme.new_order(csr_pem)
+  File "/opt/certbot/src/acme/acme/client.py", line 137, in new_order
+    response = self._post(self.directory['newOrder'], order)
+  File "/opt/certbot/src/acme/acme/client.py", line 365, in _post
+    return self.net.post(*args, **kwargs)
+  File "/opt/certbot/src/acme/acme/client.py", line 738, in post
+    return self._post_once(*args, **kwargs)
+  File "/opt/certbot/src/acme/acme/client.py", line 751, in _post_once
+    response = self._check_response(response, content_type=content_type)
+  File "/opt/certbot/src/acme/acme/client.py", line 602, in _check_response
+    raise messages.Error.from_json(jobj)
+acme.messages.Error: urn:ietf:params:acme:error:rateLimited :: There were too many requests of a given type :: Error creating new order :: too many certificates (5) already issued for this exact set of domains in the last 168 hours: migracion.jadal.pe, retry after 2024-02-04T04:48:07Z: see https://letsencrypt.org/docs/duplicate-certificate-limit/
+2024-02-02 21:29:40,410:ERROR:certbot._internal.log:An unexpected error occurred:
+2024-02-02 21:29:40,411:ERROR:certbot._internal.log:Error creating new order :: too many certificates (5) already issued for this exact set of domains in the last 168 hours: migracion.jadal.pe, retry after 2024-02-04T04:48:07Z: see https://letsencrypt.org/docs/duplicate-certificate-limit/

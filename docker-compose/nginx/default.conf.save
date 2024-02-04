@@ -20,8 +20,8 @@ server {
 
     #ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
     #ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
-    ssl_certificate /var/www/certbot/conf/live/migracion.jadal.pe/fullchain.pem;
-    ssl_certificate_key /var/www/certbot/conf/live/migracion.jadal.pe/privkey.pem;
+    ssl_certificate /etc/nginx/ssl/live/migracion.jadal.pe/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/live/migracion.jadal.pe/privkey.pem;
     ssl_dhparam /etc/nginx/dhparam/dhparam-2048.pem;
 
     #ssl_buffer_size 8k;

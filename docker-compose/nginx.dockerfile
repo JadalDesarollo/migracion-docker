@@ -1,4 +1,4 @@
-FROM nginx:1.19.4
+FROM nginx:1.14.2-alpine
 
 ADD docker-compose/nginx/default.conf /etc/nginx/conf.d/default.conf
 
