@@ -1,25 +1,25 @@
-2024-02-04 15:18:26,037:DEBUG:certbot._internal.main:certbot version: 2.8.0
-2024-02-04 15:18:26,038:DEBUG:certbot._internal.main:Location of certbot entry point: /usr/local/bin/certbot
-2024-02-04 15:18:26,038:DEBUG:certbot._internal.main:Arguments: ['--webroot', '--webroot-path=/usr/share/nginx/html/letsencrypt', '--email', 'desarrollo.jadalsoftware@gmail.com', '--agree-tos', '--no-eff-email', '-d', 'migracion.jadal.pe']
-2024-02-04 15:18:26,038:DEBUG:certbot._internal.main:Discovered plugins: PluginsRegistry(PluginEntryPoint#manual,PluginEntryPoint#null,PluginEntryPoint#standalone,PluginEntryPoint#webroot)
-2024-02-04 15:18:26,072:DEBUG:certbot._internal.log:Root logging level set at 30
-2024-02-04 15:18:26,072:DEBUG:certbot._internal.plugins.selection:Requested authenticator webroot and installer None
-2024-02-04 15:18:26,073:DEBUG:certbot._internal.plugins.selection:Single candidate plugin: * webroot
+2024-02-05 15:44:39,452:DEBUG:certbot._internal.main:certbot version: 2.8.0
+2024-02-05 15:44:39,452:DEBUG:certbot._internal.main:Location of certbot entry point: /usr/local/bin/certbot
+2024-02-05 15:44:39,452:DEBUG:certbot._internal.main:Arguments: ['--webroot', '--webroot-path=/usr/share/nginx/html/letsencrypt', '--email', 'desarrollo.jadalsoftware@gmail.com', '--agree-tos', '--no-eff-email', '-d', 'migracion.jadal.pe']
+2024-02-05 15:44:39,452:DEBUG:certbot._internal.main:Discovered plugins: PluginsRegistry(PluginEntryPoint#manual,PluginEntryPoint#null,PluginEntryPoint#standalone,PluginEntryPoint#webroot)
+2024-02-05 15:44:40,209:DEBUG:certbot._internal.log:Root logging level set at 30
+2024-02-05 15:44:40,237:DEBUG:certbot._internal.plugins.selection:Requested authenticator webroot and installer None
+2024-02-05 15:44:40,238:DEBUG:certbot._internal.plugins.selection:Single candidate plugin: * webroot
 Description: Saves the necessary validation files to a .well-known/acme-challenge/ directory within the nominated webroot path. A seperate HTTP server must be running and serving files from the webroot path. HTTP challenge only (wildcards not supported).
 Interfaces: Authenticator, Plugin
 Entry point: EntryPoint(name='webroot', value='certbot._internal.plugins.webroot:Authenticator', group='certbot.plugins')
-Initialized: <certbot._internal.plugins.webroot.Authenticator object at 0x7fddec254a30>
+Initialized: <certbot._internal.plugins.webroot.Authenticator object at 0x7f0b67feb730>
 Prep: True
-2024-02-04 15:18:26,073:DEBUG:certbot._internal.plugins.selection:Selected authenticator <certbot._internal.plugins.webroot.Authenticator object at 0x7fddec254a30> and installer None
-2024-02-04 15:18:26,073:INFO:certbot._internal.plugins.selection:Plugins selected: Authenticator webroot, Installer None
-2024-02-04 15:18:26,224:DEBUG:certbot._internal.main:Picked account: <Account(RegistrationResource(body=Registration(key=None, contact=(), agreement=None, status=None, terms_of_service_agreed=None, only_return_existing=None, external_account_binding=None), uri='https://acme-v02.api.letsencrypt.org/acme/acct/1550272667', new_authzr_uri=None, terms_of_service=None), 9b507c65556e201cf96f44fb1f74216d, Meta(creation_dt=datetime.datetime(2024, 2, 2, 17, 5, 57, tzinfo=<UTC>), creation_host='ee38a32c6a85', register_to_eff=None))>
-2024-02-04 15:18:26,236:DEBUG:acme.client:Sending GET request to https://acme-v02.api.letsencrypt.org/directory.
-2024-02-04 15:18:26,241:DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): acme-v02.api.letsencrypt.org:443
-2024-02-04 15:18:26,416:DEBUG:urllib3.connectionpool:https://acme-v02.api.letsencrypt.org:443 "GET /directory HTTP/1.1" 200 752
-2024-02-04 15:18:26,418:DEBUG:acme.client:Received response:
+2024-02-05 15:44:40,241:DEBUG:certbot._internal.plugins.selection:Selected authenticator <certbot._internal.plugins.webroot.Authenticator object at 0x7f0b67feb730> and installer None
+2024-02-05 15:44:40,242:INFO:certbot._internal.plugins.selection:Plugins selected: Authenticator webroot, Installer None
+2024-02-05 15:44:40,415:DEBUG:certbot._internal.main:Picked account: <Account(RegistrationResource(body=Registration(key=None, contact=(), agreement=None, status=None, terms_of_service_agreed=None, only_return_existing=None, external_account_binding=None), uri='https://acme-v02.api.letsencrypt.org/acme/acct/1550272667', new_authzr_uri=None, terms_of_service=None), 9b507c65556e201cf96f44fb1f74216d, Meta(creation_dt=datetime.datetime(2024, 2, 2, 17, 5, 57, tzinfo=<UTC>), creation_host='ee38a32c6a85', register_to_eff=None))>
+2024-02-05 15:44:40,417:DEBUG:acme.client:Sending GET request to https://acme-v02.api.letsencrypt.org/directory.
+2024-02-05 15:44:40,424:DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): acme-v02.api.letsencrypt.org:443
+2024-02-05 15:44:41,345:DEBUG:urllib3.connectionpool:https://acme-v02.api.letsencrypt.org:443 "GET /directory HTTP/1.1" 200 752
+2024-02-05 15:44:41,423:DEBUG:acme.client:Received response:
 HTTP 200
 Server: nginx
-Date: Sun, 04 Feb 2024 15:18:26 GMT
+Date: Mon, 05 Feb 2024 15:44:34 GMT
 Content-Type: application/json
 Content-Length: 752
 Connection: keep-alive
@@ -28,6 +28,7 @@ X-Frame-Options: DENY
 Strict-Transport-Security: max-age=604800
 
 {
+  "gCj76aKa8eU": "https://community.letsencrypt.org/t/adding-random-entries-to-the-directory/33417",
   "keyChange": "https://acme-v02.api.letsencrypt.org/acme/key-change",
   "meta": {
     "caaIdentities": [
@@ -40,15 +41,25 @@ Strict-Transport-Security: max-age=604800
   "newNonce": "https://acme-v02.api.letsencrypt.org/acme/new-nonce",
   "newOrder": "https://acme-v02.api.letsencrypt.org/acme/new-order",
   "renewalInfo": "https://acme-v02.api.letsencrypt.org/draft-ietf-acme-ari-02/renewalInfo/",
-  "revokeCert": "https://acme-v02.api.letsencrypt.org/acme/revoke-cert",
-  "yunyA2Gb1dg": "https://community.letsencrypt.org/t/adding-random-entries-to-the-directory/33417"
+  "revokeCert": "https://acme-v02.api.letsencrypt.org/acme/revoke-cert"
 }
-2024-02-04 15:18:26,466:DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): r3.o.lencr.org:80
-2024-02-04 15:18:26,553:DEBUG:urllib3.connectionpool:http://r3.o.lencr.org:80 "POST / HTTP/1.1" 200 503
-2024-02-04 15:18:26,555:DEBUG:certbot.ocsp:OCSP response for certificate /etc/letsencrypt/archive/migracion.jadal.pe/cert1.pem is signed by the certificate's issuer.
-2024-02-04 15:18:26,558:DEBUG:certbot.ocsp:OCSP certificate status for /etc/letsencrypt/archive/migracion.jadal.pe/cert1.pem is: OCSPCertStatus.GOOD
-2024-02-04 15:18:26,565:DEBUG:certbot._internal.display.obj:Notifying user: Certificate not yet due for renewal
-2024-02-04 15:18:26,565:DEBUG:certbot._internal.log:Exiting abnormally:
+2024-02-05 15:44:42,269:DEBUG:certbot._internal.cert_manager:Renewal conf file /etc/letsencrypt/renewal/migracion.jadal.pe.conf is broken. Skipping.
+2024-02-05 15:44:42,271:DEBUG:certbot._internal.cert_manager:Traceback was:
+Traceback (most recent call last):
+  File "/opt/certbot/src/certbot/certbot/_internal/cert_manager.py", line 437, in _search_lineages
+    candidate_lineage = storage.RenewableCert(renewal_file, cli_config)
+  File "/opt/certbot/src/certbot/certbot/_internal/storage.py", line 510, in __init__
+    self._check_symlinks()
+  File "/opt/certbot/src/certbot/certbot/_internal/storage.py", line 589, in _check_symlinks
+    raise errors.CertStorageError(
+certbot.errors.CertStorageError: expected /etc/letsencrypt/live/migracion.jadal.pe/cert.pem to be a symlink
+
+2024-02-05 15:44:42,811:DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): r3.o.lencr.org:80
+2024-02-05 15:44:43,476:DEBUG:urllib3.connectionpool:http://r3.o.lencr.org:80 "POST / HTTP/1.1" 200 503
+2024-02-05 15:44:43,490:DEBUG:certbot.ocsp:OCSP response for certificate /etc/letsencrypt/archive/migracion.jadal.pe-0001/cert1.pem is signed by the certificate's issuer.
+2024-02-05 15:44:43,541:DEBUG:certbot.ocsp:OCSP certificate status for /etc/letsencrypt/archive/migracion.jadal.pe-0001/cert1.pem is: OCSPCertStatus.GOOD
+2024-02-05 15:44:43,731:DEBUG:certbot._internal.display.obj:Notifying user: Certificate not yet due for renewal
+2024-02-05 15:44:43,735:DEBUG:certbot._internal.log:Exiting abnormally:
 Traceback (most recent call last):
   File "/usr/local/bin/certbot", line 33, in <module>
     sys.exit(load_entry_point('certbot', 'console_scripts', 'certbot')())
@@ -75,5 +86,5 @@ Traceback (most recent call last):
   File "/opt/certbot/src/certbot/certbot/_internal/display/util.py", line 68, in input_with_timeout
     raise EOFError
 EOFError
-2024-02-04 15:18:26,571:ERROR:certbot._internal.log:An unexpected error occurred:
-2024-02-04 15:18:26,571:ERROR:certbot._internal.log:EOFError
+2024-02-05 15:44:43,740:ERROR:certbot._internal.log:An unexpected error occurred:
+2024-02-05 15:44:43,744:ERROR:certbot._internal.log:EOFError

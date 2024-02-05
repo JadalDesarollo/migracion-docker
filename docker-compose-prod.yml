@@ -28,8 +28,21 @@ services:
             - ${SERVER_PORT:-80}:80
             - ${SERVER_PORT_SSL:-443}:443
         volumes:
-            - ./application:/var/www
+            - ./:/var/www
             - ./docker-compose/nginx:/etc/nginx/conf.d/
+            - ./dhparam:/etc/nginx/dhparam
+            - ./certbot/conf/:/etc/nginx/ssl/
+            - ./certbot/data:/usr/share/nginx/html/letsencrypt
+        networks:
+            - test-network
+
+    certbot:
+        image: certbot/certbot:latest
+        command: certonly --webroot --webroot-path=/usr/share/nginx/html/letsencrypt --email desarrollo.jadalsoftware@gmail.com --agree-tos --no-eff-email -d migracion.jadal.pe
+        volumes:
+            - ./certbot/conf/:/etc/letsencrypt
+            - ./certbot/logs/:/var/log/letsencrypt
+            - ./certbot/data:/usr/share/nginx/html/letsencrypt
         networks:
             - test-network
 
