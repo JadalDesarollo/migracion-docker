@@ -4,7 +4,7 @@
 
 This docker script is optimized for a development environment and implements the following technologies for a Laravel app:
 
-- Php 7.4
+- Php 8.1
 - Nginx
 - MySql
 - PhpMyadmin
