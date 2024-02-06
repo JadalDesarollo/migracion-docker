@@ -7,7 +7,8 @@ use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\CompanyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Api\PDFController;
+use App\Http\Controllers\Api\ExcelController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return ('API auth laravel!');
+    return ('API laravel!');
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -60,4 +61,11 @@ Route::resource('/permissions', PermissionsController::class);
 Route::resource('/companies', CompanyController::class);
 //Route::get('/companies-users', [CompanyController::class, 'getCompaniesForCurrentUser']);
 
-
+//reportes
+Route::get('create-pdf-file', [PDFController::class, 'index']);
+Route::get('create-excel-file', [ExcelController::class, 'index']);
+//reportes pdf
+Route::post('report/pdf/day', [PDFController::class, 'reportDay']);
+Route::get('report/sale/pdf/day', [PDFController::class, 'reportSaleDay']);
+//reportes excel
+Route::post('report/excel/day', [ExcelController::class, 'reportDay']);
