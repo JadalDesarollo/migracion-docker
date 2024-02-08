@@ -16,6 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('id_client');
             $table->unsignedBigInteger('id_sales');
             $table->timestamps();
+
+            // Foreign key constraints
+            $table->foreign('id_sales')->references('id_sales')->on('sales')->onDelete('cascade');
         });
     }
 

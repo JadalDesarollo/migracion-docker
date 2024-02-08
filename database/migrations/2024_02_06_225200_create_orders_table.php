@@ -18,9 +18,10 @@ return new class extends Migration
             $table->unsignedBigInteger('id_user_view')->nullable();
             $table->unsignedBigInteger('id_employee');
             $table->unsignedBigInteger('id_proforma');
+            $table->unsignedBigInteger('id_order_sale_document');
 
            // Foreign key constraint for id_proforma
-           $table->foreign('id_proforma')->references('id_proforma')->on('proformas')->onDelete('cascade');
+           //$table->foreign('id_proforma')->references('id_proforma')->on('proformas')->onDelete('cascade');
 
            // Unique constraint for id_proforma
            #$table->unique('id_proforma', 'order_uq');
@@ -30,6 +31,8 @@ return new class extends Migration
 
            // Foreign key constraint for id_transaction
            $table->foreign('id_transaction')->references('id_transaction')->on('transactions')->onDelete('cascade')->onUpdate('cascade');
+           $table->foreign('id_proforma')->references('id_proforma')->on('proformas')->onDelete('cascade')->onUpdate('cascade');
+           $table->foreign('id_order_sale_document')->references('id_order_sale_document')->on('order_sale_documents')->onDelete('cascade')->onUpdate('cascade');
 
            // Primary key constraint
            #$table->primary('id_order', 'order_pk');

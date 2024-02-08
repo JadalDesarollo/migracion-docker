@@ -21,8 +21,8 @@ return new class extends Migration
             $table->decimal('subtotal');
 
             // Add foreign key constraints if needed
-            // $table->foreign('id_product')->references('id')->on('products')->onDelete('cascade');
-            // $table->foreign('id_sales')->references('id')->on('sales')->onDelete('cascade');
+            $table->foreign('id_product')->references('id_product')->on('products')->onDelete('cascade');
+            $table->foreign('id_sales')->references('id_sales')->on('sales')->onDelete('cascade');
 
             // Primary key constraint
             //$table->primary('id_sale_detail', 'SALE_DETAIL_pk');

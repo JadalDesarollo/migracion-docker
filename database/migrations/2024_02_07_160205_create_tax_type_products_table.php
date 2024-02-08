@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('tax_type_products', function (Blueprint $table) {
             $table->id('id_tax_type_product');
             $table->unsignedBigInteger('id_type_tax');
-            $table->unsignedBigInteger('idproduct');
+            $table->unsignedBigInteger('id_product');
             $table->timestamps();
 
             //$table->foreign('id_type_tax')->references('id_type_tax')->on('type_tax')->onDelete('cascade')->onUpdate('cascade');
-            //$table->foreign('idproduct')->references('idproduct')->on('products')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_product')->references('id_product')->on('products')->onDelete('cascade')->onUpdate('cascade');
         });
 
         //DB::statement('ALTER TABLE tax_type_products OWNER TO postgres');

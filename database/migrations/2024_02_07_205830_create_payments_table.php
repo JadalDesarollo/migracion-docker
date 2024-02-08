@@ -12,9 +12,27 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payments', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_payment');
+            $table->smallInteger('id_payment_method')->nullable();
+            $table->unsignedBigInteger('id_sales')->nullable();
+            $table->unsignedBigInteger('id_currency')->nullable();
+
+            // Constraints
+            //$table->foreign('id_sales')->references('id')->on('sales')->onDelete('cascade');
+            $table->foreign('id_payment_method')->references('id_payment_method')->on('payment_methods')->onDelete('cascade');
+            $table->foreign('id_currency')->references('id_currency')->on('currencies')->onDelete('cascade');
+
+            // Primary key constraint (alternatively you can use id() or increments() instead of id_payment)
+            // $table->primary('id_payment');
+
+            // If you want to create indexes or unique constraints, you can define them here
+            // $table->index('id_payment_method');
+            // $table->unique('id_payment_method');
             $table->timestamps();
         });
+
+        // Set owner of the table
+        // DB::statement('ALTER TABLE payment OWNER TO postgres');
     }
 
     /**

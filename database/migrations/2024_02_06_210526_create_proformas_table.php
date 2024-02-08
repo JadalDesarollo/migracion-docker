@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('broadcast_date');
             $table->unsignedBigInteger('id_currency');
             $table->unsignedBigInteger('id_local');
-            $table->unsignedBigInteger('id_transaction')->nullable();
+            $table->unsignedBigInteger('id_transaction');
             $table->unsignedBigInteger('id_user_view')->nullable();
             $table->unsignedBigInteger('id_employee')->nullable();
             $table->timestamps();
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->foreign('id_transaction')->references('id_transaction')->on('transactions')->onDelete('cascade')->onUpdate('cascade');
         });
         // Ejecuta SQL puro para agregar herencia
-        DB::statement('ALTER TABLE proformas ALTER COLUMN id_transaction SET NOT NULL');
+        DB::statement('ALTER TABLE proformas INHERIT transactions');
     }
 
     /**

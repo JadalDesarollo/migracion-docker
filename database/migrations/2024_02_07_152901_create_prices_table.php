@@ -13,18 +13,20 @@ return new class extends Migration
     {
         Schema::create('prices', function (Blueprint $table) {
             $table->id('id_price');
-            $table->unsignedBigInteger('idproduct');
-            $table->unsignedBigInteger('idcurrency');
+            $table->unsignedBigInteger('id_product');
+            $table->unsignedBigInteger('id_currency');
             $table->decimal('price');
             $table->unsignedBigInteger('id_list_price')->nullable();
+            $table->timestamps();
 
             // Primary key constraint
             //$table->primary('id_price', 'price_pk');
 
             // Foreign key constraints
-            //$table->foreign('idproduct')->references('idproduct')->on('products')->onDelete('cascade')->onUpdate('cascade');
-            //$table->foreign('idcurrency')->references('idcurrency')->on('currencies')->onDelete('cascade')->onUpdate('cascade');
-            //$table->foreign('id_list_price')->references('id_list_price')->on('list_prices')->onDelete('set null')->onUpdate('cascade');
+            //$table->foreign('id_product')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_currency')->references('id_currency')->on('currencies')->onDelete('cascade')->onUpdate('cascade');
+            // Si hay una relación uno a uno con list_prices, también agregue la siguiente línea:
+            // $table->foreign('id_list_price')->references('id_list_price')->on('list_prices')->onDelete('set null')->onUpdate('cascade');
         });
 
         // Set owner of the table

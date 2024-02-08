@@ -15,19 +15,15 @@ return new class extends Migration
             $table->id('id_transaction')->unique();
             $table->unsignedBigInteger('id_user_view')->nullable();
             $table->unsignedBigInteger('id_employee')->nullable();
-            $table->timestamps();
 
-            // $table->foreign('id_user_view')
-            //     ->references('id_user_view')
-            //     ->on('user_view')
-            //     ->onDelete('set null')
-            //     ->onUpdate('cascade');
+            $table->foreign('id_user_view')->references('id_user_view')->on('user_views')->onDelete('set null')->onUpdate('cascade');
 
             // $table->foreign('id_employee')
             //     ->references('id_employee')
             //     ->on('employee')
             //     ->onDelete('set null')
             //     ->onUpdate('cascade');
+            $table->timestamps();
         });
     }
 

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_order_sale_document')->nullable();
 
             // Foreign key constraints
-            $table->foreign('id_sales')->references('id_order_sale_document')->on('order_sale_documents')->onDelete('cascade');
+            $table->foreign('id_order_sale_document')->references('id_order_sale_document')->on('order_sale_documents')->onDelete('cascade');
+            $table->foreign('id_sales')->references('id_sales')->on('sales')->onDelete('cascade');
             //$table->foreign('id_sales')->references('id')->on('sales')->onDelete('cascade');
             //$table->foreign('id_order_sale_document')->references('id_order_sale_document')->on('order_sale_documents')->onDelete('cascade');
 
