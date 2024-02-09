@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Constraints
-            //$table->foreign('id_payment')->references('id')->on('payments')->onDelete('cascade');
+            $table->foreign('id_payment')->references('id_payment')->on('payments')->onDelete('cascade');
             //$table->foreign('id_card')->references('id')->on('cards')->onDelete('cascade');
 
             // Primary key constraint

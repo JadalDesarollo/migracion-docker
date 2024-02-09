@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_currency')->nullable();
 
             // Constraints
-            //$table->foreign('id_sales')->references('id')->on('sales')->onDelete('cascade');
+            $table->foreign('id_sales')->references('id_sales')->on('sales')->onDelete('cascade');
             $table->foreign('id_payment_method')->references('id_payment_method')->on('payment_methods')->onDelete('cascade');
             $table->foreign('id_currency')->references('id_currency')->on('currencies')->onDelete('cascade');
 

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_product');
             $table->timestamps();
 
-            //$table->foreign('id_type_tax')->references('id_type_tax')->on('type_tax')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_type_tax')->references('id_type_tax')->on('tax_types')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('id_product')->references('id_product')->on('products')->onDelete('cascade')->onUpdate('cascade');
         });
 

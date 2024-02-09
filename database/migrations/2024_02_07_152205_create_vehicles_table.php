@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('vehicles', function (Blueprint $table) {
-            $table->id('idvehicle');
+            $table->id('id_vehicle');
             $table->string('vehicle_plate', 45);
 
             // Primary key constraint

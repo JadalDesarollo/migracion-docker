@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('client_price_products', function (Blueprint $table) {
             $table->id('id_client_price_product');
-            $table->unsignedBigInteger('idproduct');
+            $table->unsignedBigInteger('id_product');
             $table->unsignedBigInteger('id_client');
             $table->decimal('price');
-            $table->unsignedBigInteger('idcurrency');
+            $table->unsignedBigInteger('id_currency');
 
-            //$table->foreign('idproduct')->references('idproduct')->on('products')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('id_product')->references('id_product')->on('products')->onDelete('set null')->onUpdate('cascade');
             // Add foreign key constraint for id_client referencing clients table
-            // $table->foreign('id_client')->references('id_client')->on('clients')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_client')->references('id_client')->on('clients')->onDelete('cascade')->onUpdate('cascade');
             // Add foreign key constraint for idcurrency referencing currencies table
-            // $table->foreign('idcurrency')->references('idcurrency')->on('currencies')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_currency')->references('id_currency')->on('currencies')->onDelete('cascade')->onUpdate('cascade');
 
             $table->timestamps();
         });
