@@ -26,6 +26,7 @@ return new class extends Migration
 
             // Primary key constraint
             //$table->primary('id_sale_detail', 'SALE_DETAIL_pk');
+            $table->timestamps();
         });
 
         // Set owner of the table
