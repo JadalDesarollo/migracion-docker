@@ -5,60 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reporte Diario de Ventas</title>
-    <link rel stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <style>
-        .table thead {
-            background-color: #071846;
-            color: #FFFFFF;
-            /* Color de fondo azul claro */
-        }
-
-        .header {
-            text-align: center;
-            background-color: #071846;
-            margin-bottom: 20px;
-            color: #FFFFFF;
-        }
-
-        .left-content {
-            text-align: left;
-            font-weight: bold;
-            float: left;
-            /* Alinea a la izquierda */
-        }
-
-        .right-content {
-            text-align: left;
-            font-weight: bold;
-            float: right;
-            /* Alinea a la derecha */
-        }
-
-        .clear {
-            clear: both;
-        }
-
-        @page {
-            size: A4 landscape;
-        }
-
-        p {
-            line-height: 0.2;
-            /* Puedes ajustar este valor según tus preferencias */
-        }
-
-        td {
-            text-align: right;
-        }
-
-        table {
-            width: 100%;
-        }
-
-        .table tbody tr:nth-child(odd) {
-            background-color: #f2f2f2;
-            /* Color de fondo para filas impares */
-        }
+        /* Estilos CSS aquí */
     </style>
 </head>
 
@@ -81,11 +30,10 @@
                 <p>Hora: </p>
             </div>
 
-            <div class="clear"></div>
+            <div style="clear: both;"></div>
         </div>
 
         <table class="table table-bordered">
-
             <thead>
                 <tr>
                     <th rowspan="2">Fecha</th>
@@ -99,51 +47,25 @@
                     <th>GAL</th>
                     <th>SOLES</th>
                     @endforeach
-                    <th>GAL</th> <!-- Agregado -->
-                    <th>SOLES</th> <!-- Agregado -->
+                    <th>GAL</th>
+                    <th>SOLES</th>
                 </tr>
             </thead>
 
-
             <tbody>
                 @foreach($data['sales'] as $sale)
-                @php
-                $ventasArray = json_decode($sale->ventas, true);
-                @endphp
-
-                @foreach($ventasArray as $fecha => $productos)
                 <tr>
-                    <td>{{ $fecha }}</td>
+                    <td>{{ $sale->fecha }}</td>
                     @foreach($data['products_name'] as $product_name)
-
-                    @php
-                    $totalQuantity = 0;
-                    $totalPrice = 0;
-                    foreach ($productos as $producto) {
-                    if ($producto['product_name'] == $product_name) {
-                    $totalQuantity += $producto['quantity'];
-                    $totalPrice += $producto['price'];
-                    }
-                    }
-                    @endphp
-                    <!-- {{ $product_name}} -->
-                    <td>
-                        {{ $totalQuantity > 0 ? $totalQuantity : '0' }}
-                    </td>
-                    <td>
-                        {{ $totalPrice > 0 ? $totalPrice : '0' }}
-                    </td>
+                    <td>{{ $sale->{$product_name . '-Galones'} }}</td>
+                    <td>{{ $sale->{$product_name . '-Soles'} }}</td>
                     @endforeach
-                    <td>{{-- Agrega el código para mostrar totales si es necesario --}}</td>
+                    <td>{{ $sale->{'Total-Galones(delaFila)'} }}</td>
+                    <td>{{ $sale->{'Total-Soles(delaFila)'} }}</td>
                 </tr>
                 @endforeach
-                @endforeach
-
-
             </tbody>
         </table>
-
-        <!-- Agrega cualquier otro contenido necesario -->
     </div>
 </body>
 

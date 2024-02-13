@@ -64,8 +64,14 @@ Route::resource('/companies', CompanyController::class);
 //reportes
 Route::get('create-pdf-file', [PDFController::class, 'index']);
 Route::get('create-excel-file', [ExcelController::class, 'index']);
+
 //reportes pdf
-Route::get('report/pdf/day', [PDFController::class, 'reportDay']);
+Route::post('report/accumulated/day/table', [PDFController::class, 'reportAccumulatedDayTable']);
+
+Route::post('report/accumulated/day/pdf', [PDFController::class, 'reportAccumulatedDayPdf']);
 Route::get('report/sale/pdf/day', [PDFController::class, 'reportSaleDay']);
+
 //reportes excel
 Route::post('report/excel/day', [ExcelController::class, 'reportDay']);
+
+Route::post('report/accumulated/day/excel', [ExcelController::class, 'reportAccumulatedDayExcel']);

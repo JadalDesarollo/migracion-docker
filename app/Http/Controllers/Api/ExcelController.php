@@ -59,4 +59,50 @@ class ExcelController extends Controller
         // Generar un archivo Excel
         return Excel::download(new ReportDayExport($data), 'invoices.xlsx');
     }
+
+
+    public function reportAccumulatedDayExcel(Request $request)
+    {
+        try {
+            // Obtener las fechas de inicio y fin del request
+            $startDate = $request->input('startDate');
+            $endDate = $request->input('endDate');
+
+            // Convertir las fechas de texto a objetos DateTime
+            $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+            $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+
+            if (!$startDate || !$endDate) {
+                throw new \Exception("Error al convertir las fechas");
+            }
+
+            // Ejecutar la consulta SQL utilizando los objetos DateTime
+            $sales = DB::select('SELECT * FROM report_accumulated_day_05(:start_date, :end_date)', [
+                'start_date' => $startDate->format('Y-m-d'), // Usar el formato correcto para la consulta SQL
+                'end_date' => $endDate->format('Y-m-d'),
+            ]);
+
+            // Definir el título
+            $title = 'Reporte de Ventas Diarias';
+
+            // Definir la estación y el usuario
+            $establishment = 'falaser';
+            $user = 'Nombre de usuario';
+
+            $data = [
+                'title' => 'Reportes diarios',
+                'date' => date('d/m/Y'),
+                'content' => $sales,
+            ];
+
+            // Generar un archivo Excel
+            return Excel::download(new ReportDayExport($data), 'invoices.xlsx');
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
+
+
 }
