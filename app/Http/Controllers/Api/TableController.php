@@ -11,7 +11,7 @@ use App\Models\Product;
 use Carbon\Carbon;
 
 
-class PDFController extends Controller
+class TableController extends Controller
 {
     public function index()
     {
@@ -71,46 +71,47 @@ class PDFController extends Controller
     //     return $pdf->download('tutsmake.pdf');
     // }
 
-    public function reportAccumulatedDayPdf(Request $request)
+    public function reportAccumulatedDayTable(Request $request)
     {
-        // Obtener las fechas de inicio y fin del request
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
 
-        // Convertir las fechas de texto a objetos DateTime
         $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
         $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
 
-        // Ejecutar la consulta SQL utilizando los objetos DateTime
-        $sales = DB::select('SELECT * FROM report_accumulated_day_05(:start_date, :end_date)', [
+        $result = DB::select('SELECT * FROM report_accumulated_day_05(:start_date, :end_date)', [
             'start_date' => $startDate->format('Y-m-d'), // Usar el formato correcto para la consulta SQL
             'end_date' => $endDate->format('Y-m-d'),
         ]);
 
-        // Definir los nombres de los productos
-        $productNames = [
-            "84 OCT(produc)",
-        ];
-
-        // Hacer lo que necesites con el resultado, como imprimirlo o pasarlo a una vista
-        $data = [
-            'title' => 'Reportes diarios',
-            'date' => date('d/m/Y'),
-            'products_name' => $productNames,
-            'sales' => $sales,
-            'establishment' => 'falaser',
-        ];
-
-        // Cargar la vista del PDF y pasar los datos
-        $pdf = PDF::loadView('reportpdf.report_day_sale',  compact('data'));
-
-        // Descargar el PDF
-        return $pdf->download('tutsmake.pdf');
+        return $result;
     }
 
-    public function reportSale(Request $request){
-        return 'reportSale';
+    public function reportSale(Request $request)
+    {
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+
+        $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+        $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+
+        $result = DB::select('SELECT * FROM report_sales_01(:start_date, :end_date)', [
+            'start_date' => $startDate->format('Y-m-d'), // Usar el formato correcto para la consulta SQL
+            'end_date' => $endDate->format('Y-m-d'),
+        ]);
+
+        return $result;
     }
+
+    public function reportBank()
+    {
+        $result = DB::select('SELECT * FROM report_bank()');
+
+        return $result;
+    }
+
+
+
 
     public function reportSaleDay()
     {

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\CompanyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\TableController;
 use App\Http\Controllers\Api\PDFController;
 use App\Http\Controllers\Api\ExcelController;
 /*
@@ -61,17 +62,19 @@ Route::resource('/permissions', PermissionsController::class);
 Route::resource('/companies', CompanyController::class);
 //Route::get('/companies-users', [CompanyController::class, 'getCompaniesForCurrentUser']);
 
-//reportes
+//reportes example
 Route::get('create-pdf-file', [PDFController::class, 'index']);
 Route::get('create-excel-file', [ExcelController::class, 'index']);
 
-//reportes pdf
-Route::post('report/accumulated/day/table', [PDFController::class, 'reportAccumulatedDayTable']);
+//reportes table
+Route::post('report/accumulated/day/table', [TableController::class, 'reportAccumulatedDayTable']);
+Route::post('report/sale/table', [TableController::class, 'reportSale']);
+Route::get('report/bank/table', [TableController::class, 'reportBank']);
 
+//reportes pdf
 Route::post('report/accumulated/day/pdf', [PDFController::class, 'reportAccumulatedDayPdf']);
 Route::get('report/sale/pdf/day', [PDFController::class, 'reportSaleDay']);
 
 //reportes excel
 Route::post('report/excel/day', [ExcelController::class, 'reportDay']);
-
 Route::post('report/accumulated/day/excel', [ExcelController::class, 'reportAccumulatedDayExcel']);
