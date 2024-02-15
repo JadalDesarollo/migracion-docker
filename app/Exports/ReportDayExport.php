@@ -18,7 +18,7 @@ class ReportDayExport implements FromView, WithStyles
 
     public function view(): View
     {
-        return view('reportexcel.reportDay', [
+        return view('reportexcel.report_day_sale', [
             'data' => $this->data
         ]);
     }

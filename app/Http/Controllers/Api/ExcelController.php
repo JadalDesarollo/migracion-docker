@@ -92,7 +92,12 @@ class ExcelController extends Controller
             $data = [
                 'title' => 'Reportes diarios',
                 'date' => date('d/m/Y'),
+                'desde' => $startDate->format('d/m/Y'),
+                'hasta' => $endDate->format('d/m/Y'),
+                'local' => 'local',
                 'content' => $sales,
+                'user' => 'user',
+                'establishment' => 'localTest',
             ];
 
             // Generar un archivo Excel

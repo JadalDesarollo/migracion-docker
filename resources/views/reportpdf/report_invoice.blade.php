@@ -6,7 +6,7 @@ $pageNumber = 1;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte Diario de Ventas</title>
+    <title>Reporte de Facturas</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <style>
         .table thead {
@@ -91,20 +91,27 @@ $pageNumber = 1;
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th rowspan="2">Fecha</th>
+                    <!-- <th rowspan="2">Tipo Doc.</th>
                     @foreach($data['products_name'] as $product_name)
                     <th colspan="2">{{ $product_name }}</th>
-                    @endforeach
-                    <th colspan="2">Totales</th>
+                    @endforeach -->
+                    <th colspan="2">N° DOC.</th>
+                    <th colspan="2">Producto</th>
+                    <th colspan="2">Cantidad</th>
+                    <th colspan="2">Precio</th>
+                    <th colspan="2">Dscto</th>
+                    <th colspan="2">Total</th>
+                    <th colspan="2">Fecha Emisión</th>
+                    <th colspan="2">Situación</th>
                 </tr>
-                <tr>
+                <!-- <tr>
                     @foreach($data['products_name'] as $product_name)
                     <th>GAL</th>
                     <th>SOLES</th>
                     @endforeach
                     <th>GAL</th>
                     <th>SOLES</th>
-                </tr>
+                </tr> -->
             </thead>
 
             <tbody>

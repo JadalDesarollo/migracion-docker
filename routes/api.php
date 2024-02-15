@@ -34,7 +34,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 //Route::get('/me', [AuthController::class,'me']);
 //add this middleware to ensure that every request is authenticated
 
-Route::get('/login', function(){
+Route::get('/login', function () {
     // return sendError('Unauthorised', '', 401);
     return response()->json(['message' => 'Unauthorised'], 401);
 })->name('login');
@@ -44,7 +44,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/me', [AuthController::class, 'me'])->name('me');
 
     //Route::get('/users', [AuthController::class, 'index'])->name('index');
-    Route::resource('/blog', BlogController::class)->except('create','edit');
+    Route::resource('/blog', BlogController::class)->except('create', 'edit');
     Route::post('/refresh/token', [AuthController::class, 'refreshToken']);
 
     Route::get('/companies_users', [CompanyController::class, 'getCompaniesForCurrentUser']);
@@ -62,19 +62,51 @@ Route::resource('/permissions', PermissionsController::class);
 Route::resource('/companies', CompanyController::class);
 //Route::get('/companies-users', [CompanyController::class, 'getCompaniesForCurrentUser']);
 
-//reportes example
-Route::get('create-pdf-file', [PDFController::class, 'index']);
-Route::get('create-excel-file', [ExcelController::class, 'index']);
+
+
+
+Route::prefix('report')->group(function () {
+
+    //reportes example
+    Route::get('create-pdf-file', [PDFController::class, 'index']);
+    Route::get('create-excel-file', [ExcelController::class, 'index']);
+
+    //reportes table
+    Route::prefix('table')->group(function () {
+        Route::post('accumulated/day', [TableController::class, 'reportAccumulatedDayTable']);
+        Route::post('sale', [TableController::class, 'reportSale']);
+        Route::get('bank', [TableController::class, 'reportBank']);
+        Route::get('invoice', [TableController::class, 'reportInvoice']);
+    });
+
+    //reportes pdf
+    Route::prefix('pdf')->group(function () {
+        Route::post('accumulated/day', [TableController::class, 'reportAccumulatedDayTable']);
+        Route::post('sale', [TableController::class, 'reportSale']);
+        Route::get('bank', [TableController::class, 'reportBank']);
+        Route::get('invoice', [TableController::class, 'reportInvoice']);
+    });
+
+    //reportes excel
+    Route::prefix('excel')->group(function () {
+        Route::post('day', [ExcelController::class, 'reportDay']);
+        Route::post('accumulated/day', [ExcelController::class, 'reportAccumulatedDayExcel']);
+        Route::get('invoice', [ExcelController::class, 'reportAccumulatedDayExcel']);
+    });
+});
 
 //reportes table
-Route::post('report/accumulated/day/table', [TableController::class, 'reportAccumulatedDayTable']);
-Route::post('report/sale/table', [TableController::class, 'reportSale']);
-Route::get('report/bank/table', [TableController::class, 'reportBank']);
+//Route::post('report/accumulated/day/table', [TableController::class, 'reportAccumulatedDayTable']);
+// Route::post('report/sale/table', [TableController::class, 'reportSale']);
+// Route::get('report/bank/table', [TableController::class, 'reportBank']);
+// Route::get('report/invoice/table', [TableController::class, 'reportBank']);
 
-//reportes pdf
-Route::post('report/accumulated/day/pdf', [PDFController::class, 'reportAccumulatedDayPdf']);
-Route::get('report/sale/pdf/day', [PDFController::class, 'reportSaleDay']);
+// //reportes pdf
+// Route::post('report/accumulated/day/pdf', [PDFController::class, 'reportAccumulatedDayPdf']);
+// Route::get('report/sale/pdf/day', [PDFController::class, 'reportSaleDay']);
+// Route::post('report/invoice/pdf', [PDFController::class, 'reportInvoice']);
 
-//reportes excel
-Route::post('report/excel/day', [ExcelController::class, 'reportDay']);
-Route::post('report/accumulated/day/excel', [ExcelController::class, 'reportAccumulatedDayExcel']);
+// //reportes excel
+// Route::post('report/excel/day', [ExcelController::class, 'reportDay']);
+// Route::post('report/accumulated/day/excel', [ExcelController::class, 'reportAccumulatedDayExcel']);
+// Route::post('report/invoice/excel', [ExcelController::class, 'reportAccumulatedDayExcel']);

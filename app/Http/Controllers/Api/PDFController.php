@@ -73,42 +73,38 @@ class PDFController extends Controller
 
     public function reportAccumulatedDayPdf(Request $request)
     {
-        // Obtener las fechas de inicio y fin del request
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
-
-        // Convertir las fechas de texto a objetos DateTime
         $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
         $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
 
-        // Ejecutar la consulta SQL utilizando los objetos DateTime
         $sales = DB::select('SELECT * FROM report_accumulated_day_05(:start_date, :end_date)', [
-            'start_date' => $startDate->format('Y-m-d'), // Usar el formato correcto para la consulta SQL
+            'start_date' => $startDate->format('Y-m-d'),
             'end_date' => $endDate->format('Y-m-d'),
         ]);
 
-        // Definir los nombres de los productos
         $productNames = [
             "84 OCT(produc)",
         ];
 
-        // Hacer lo que necesites con el resultado, como imprimirlo o pasarlo a una vista
         $data = [
-            'title' => 'Reportes diarios',
+            'title' => 'Reportes acumulado diario',
             'date' => date('d/m/Y'),
             'products_name' => $productNames,
             'sales' => $sales,
+            'desde' => $startDate->format('d/m/Y'),
+            'hasta' => $endDate->format('d/m/Y'),
             'establishment' => 'falaser',
+            'user' => 'usuarioTest',
         ];
 
-        // Cargar la vista del PDF y pasar los datos
         $pdf = PDF::loadView('reportpdf.report_day_sale',  compact('data'));
 
-        // Descargar el PDF
-        return $pdf->download('tutsmake.pdf');
+        return $pdf->download('reporte-acumulado-diario-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
     }
 
-    public function reportSale(Request $request){
+    public function reportSale(Request $request)
+    {
         return 'reportSale';
     }
 
@@ -138,5 +134,37 @@ class PDFController extends Controller
         $pdf = PDF::loadView('reportpdf.report_day_sale',  compact('data'));
 
         return $pdf->download('tutsmake.pdf');
+    }
+
+    public function reportInvoice(Request $request)
+    {
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+        $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+
+        $sales = DB::select('SELECT * FROM report_accumulated_day_05(:start_date, :end_date)', [
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d'),
+        ]);
+
+        $productNames = [
+            "84 OCT(produc)",
+        ];
+
+        $data = [
+            'title' => 'Reporte de facturas',
+            'date' => date('d/m/Y'),
+            'products_name' => $productNames,
+            'sales' => $sales,
+            'desde' => $startDate->format('d/m/Y'),
+            'hasta' => $endDate->format('d/m/Y'),
+            'establishment' => 'falaser',
+            'user' => 'usuarioTest',
+        ];
+
+        $pdf = PDF::loadView('reportpdf.report_invoice',  compact('data'));
+
+        return $pdf->download('reporte-acumulado-diario-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
     }
 }
