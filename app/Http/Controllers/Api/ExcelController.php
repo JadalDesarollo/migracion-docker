@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Exports\InvoicesExport; // Asegúrate de importar la clase de exportación
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ReportDayExport;
+use App\Exports\ReportInvoiceExport;
 use Illuminate\Support\Facades\DB;
 use App\Models\Establishment;
 class ExcelController extends Controller
@@ -107,7 +108,53 @@ class ExcelController extends Controller
         }
     }
 
+    public function reportInvoice(Request $request)
+    {
+        try {
+            // Obtener las fechas de inicio y fin del request
+            $startDate = $request->input('startDate');
+            $endDate = $request->input('endDate');
 
+            // Convertir las fechas de texto a objetos DateTime
+            $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+            $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
 
+            if (!$startDate || !$endDate) {
+                throw new \Exception("Error al convertir las fechas");
+            }
 
+            // Ejecutar la consulta SQL utilizando los objetos DateTime
+            $sales = DB::select('SELECT * FROM report_accumulated_day_05(:start_date, :end_date)', [
+                'start_date' => $startDate->format('Y-m-d'), // Usar el formato correcto para la consulta SQL
+                'end_date' => $endDate->format('Y-m-d'),
+            ]);
+
+            // Definir el título
+            $title = 'Reporte de Ventas Diarias';
+
+            // Definir la estación y el usuario
+            $establishment = 'falaser';
+            $user = 'Nombre de usuario';
+
+            $data = [
+                'title' => 'Reporte de facturas',
+                'date' => date('d/m/Y'),
+                'desde' => $startDate->format('d/m/Y'),
+                'hasta' => $endDate->format('d/m/Y'),
+                'local' => 'local',
+                'content' => $sales,
+                'user' => 'user',
+                'establishment' => 'localTest',
+            ];
+
+            // Generar un archivo Excel
+            return Excel::download(new ReportInvoiceExport($data), 'invoices.xlsx');
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function reportAdministrative(Request $request){
+        return 'reportAdministrative';
+    }
 }

@@ -105,7 +105,9 @@ class PDFController extends Controller
 
     public function reportSale(Request $request)
     {
-        return 'reportSale';
+        $pdf = PDF::loadView('reportpdf.report_sale');
+
+        return $pdf->download('reporte-acumulado-diario-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
     }
 
     public function reportSaleDay()
@@ -153,7 +155,7 @@ class PDFController extends Controller
         ];
 
         $data = [
-            'title' => 'Reporte de facturas',
+            'title' => 'Reporte de Facturas',
             'date' => date('d/m/Y'),
             'products_name' => $productNames,
             'sales' => $sales,
@@ -166,5 +168,68 @@ class PDFController extends Controller
         $pdf = PDF::loadView('reportpdf.report_invoice',  compact('data'));
 
         return $pdf->download('reporte-acumulado-diario-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
+    }
+
+    public function reportAdministrative(Request $request){
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+        $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+
+        $sales = DB::select('SELECT * FROM report_accumulated_day_05(:start_date, :end_date)', [
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d'),
+        ]);
+
+        $productNames = [
+            "84 OCT(produc)",
+        ];
+
+        $data = [
+            'title' => 'Reporte administrativo',
+            'date' => date('d/m/Y'),
+            'products_name' => $productNames,
+            'sales' => $sales,
+            'desde' => $startDate->format('d/m/Y'),
+            'hasta' => $endDate->format('d/m/Y'),
+            'establishment' => 'falaser',
+            'user' => 'usuarioTest',
+        ];
+
+        $pdf = PDF::loadView('reportpdf.report_administrative',  compact('data'));
+
+        return $pdf->download('reporte-administrativo-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
+    }
+
+    public function reportStatistical(Request $request)
+    {
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+        $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+
+        $sales = DB::select('SELECT * FROM report_accumulated_day_05(:start_date, :end_date)', [
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d'),
+        ]);
+
+        $productNames = [
+            "84 OCT(produc)",
+        ];
+
+        $data = [
+            'title' => 'Reporte administrativo',
+            'date' => date('d/m/Y'),
+            'products_name' => $productNames,
+            'sales' => $sales,
+            'desde' => $startDate->format('d/m/Y'),
+            'hasta' => $endDate->format('d/m/Y'),
+            'establishment' => 'falaser',
+            'user' => 'usuarioTest',
+        ];
+
+        $pdf = PDF::loadView('reportpdf.report_statistical',  compact('data'));
+
+        return $pdf->download('reporte-statistical-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
     }
 }

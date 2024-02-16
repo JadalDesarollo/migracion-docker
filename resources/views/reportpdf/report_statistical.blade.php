@@ -6,6 +6,6 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>SAlesss</h1>
+    <h1>statistical</h1>
 </body>
 </html>

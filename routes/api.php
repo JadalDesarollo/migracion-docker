@@ -62,9 +62,6 @@ Route::resource('/permissions', PermissionsController::class);
 Route::resource('/companies', CompanyController::class);
 //Route::get('/companies-users', [CompanyController::class, 'getCompaniesForCurrentUser']);
 
-
-
-
 Route::prefix('report')->group(function () {
 
     //reportes example
@@ -73,25 +70,30 @@ Route::prefix('report')->group(function () {
 
     //reportes table
     Route::prefix('table')->group(function () {
+        Route::get('invoice', [TableController::class, 'reportInvoice']);
         Route::post('accumulated/day', [TableController::class, 'reportAccumulatedDayTable']);
         Route::post('sale', [TableController::class, 'reportSale']);
         Route::get('bank', [TableController::class, 'reportBank']);
-        Route::get('invoice', [TableController::class, 'reportInvoice']);
     });
 
     //reportes pdf
     Route::prefix('pdf')->group(function () {
-        Route::post('accumulated/day', [TableController::class, 'reportAccumulatedDayTable']);
-        Route::post('sale', [TableController::class, 'reportSale']);
-        Route::get('bank', [TableController::class, 'reportBank']);
-        Route::get('invoice', [TableController::class, 'reportInvoice']);
+        Route::post('invoice', [PDFController::class, 'reportInvoice']);
+        Route::post('accumulated/day', [PDFController::class, 'reportAccumulatedDayPdf']);
+        Route::post('sale', [PDFController::class, 'reportSale']);
+        Route::post('sale/day', [PDFController::class, 'reportSaleDay']);
+        Route::get('bank', [PDFController::class, 'reportBank']);
+        Route::post('administrative', [PDFController::class, 'reportAdministrative']);
+        Route::post('statistical', [PDFController::class, 'reportStatistical']);
     });
 
     //reportes excel
     Route::prefix('excel')->group(function () {
+        Route::post('invoice', [ExcelController::class, 'reportInvoice']);
         Route::post('day', [ExcelController::class, 'reportDay']);
         Route::post('accumulated/day', [ExcelController::class, 'reportAccumulatedDayExcel']);
-        Route::get('invoice', [ExcelController::class, 'reportAccumulatedDayExcel']);
+        Route::post('administrative', [ExcelController::class, 'reportAdministrative']);
+        Route::post('statistical', [ExcelController::class, 'reportStatistical']);
     });
 });
 
