@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Establishment;
 use App\Models\Product;
 use Carbon\Carbon;
-
+use Svg\Tag\Rect;
 
 class PDFController extends Controller
 {
@@ -170,7 +170,8 @@ class PDFController extends Controller
         return $pdf->download('reporte-acumulado-diario-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
     }
 
-    public function reportAdministrative(Request $request){
+    public function reportAdministrative(Request $request)
+    {
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
         $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
@@ -231,5 +232,40 @@ class PDFController extends Controller
         $pdf = PDF::loadView('reportpdf.report_statistical',  compact('data'));
 
         return $pdf->download('reporte-statistical-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
+    }
+
+    public function reportControlEffective(Request $request)
+    {
+        $pdf = PDF::loadView('reportpdf.report_effective_control');
+        return $pdf->download('reporte-effective-control-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
+    }
+
+    public function reportBank()
+    {
+        $pdf = PDF::loadView('reportpdf.report_bank');
+
+        return $pdf->download('reporte-bank-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
+    }
+
+    public function reportPrettyCash()
+    {
+        $pdf = PDF::loadView('reportpdf.report_pretty_cash');
+
+        return $pdf->download('reporte-pretty-cash-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
+    }
+
+    public function reportCollection()
+    {
+        $pdf = PDF::loadView('reportpdf.report_collection');
+
+        return $pdf->download('reporte-collection-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
+    }
+
+    public function reportProfitability()
+    {
+
+        $pdf = PDF::loadView('reportpdf.report_profitability');
+
+        return $pdf->download('reporte-profitability-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
     }
 }

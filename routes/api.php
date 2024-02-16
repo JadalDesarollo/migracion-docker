@@ -85,6 +85,11 @@ Route::prefix('report')->group(function () {
         Route::get('bank', [PDFController::class, 'reportBank']);
         Route::post('administrative', [PDFController::class, 'reportAdministrative']);
         Route::post('statistical', [PDFController::class, 'reportStatistical']);
+        Route::post('effective/control', [PDFController::class, 'reportControlEffective']);
+        Route::post('bank', [PDFController::class, 'reportBank']);
+        Route::post('pretty/cash', [PDFController::class, 'reportPrettyCash']);
+        Route::post('collection', [PDFController::class, 'reportCollection']);
+        Route::post('profitability', [PDFController::class, 'reportProfitability']);
     });
 
     //reportes excel
