@@ -268,4 +268,11 @@ class PDFController extends Controller
 
         return $pdf->download('reporte-profitability-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
     }
+
+    public function reportSaleNote()
+    {
+        $pdf = PDF::loadView('reportpdf.report_sale_note');
+
+        return $pdf->download('reporte-sale-note' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
+    }
 }

@@ -94,6 +94,7 @@ Route::prefix('report')->group(function () {
         Route::post('pretty/cash', [PDFController::class, 'reportPrettyCash']);
         Route::post('collection', [PDFController::class, 'reportCollection']);
         Route::post('profitability', [PDFController::class, 'reportProfitability']);
+        Route::post('sale/note', [PDFController::class, 'reportSaleNote']);
     });
 
     //reportes excel
