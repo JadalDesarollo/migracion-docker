@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TableController;
 use App\Http\Controllers\Api\PDFController;
 use App\Http\Controllers\Api\ExcelController;
+use App\Http\Controllers\Api\LocalController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -61,6 +63,8 @@ Route::resource('/roles', RolesController::class);
 Route::resource('/permissions', PermissionsController::class);
 Route::resource('/companies', CompanyController::class);
 //Route::get('/companies-users', [CompanyController::class, 'getCompaniesForCurrentUser']);
+
+Route::resource('/local', LocalController::class);
 
 Route::prefix('report')->group(function () {
 
