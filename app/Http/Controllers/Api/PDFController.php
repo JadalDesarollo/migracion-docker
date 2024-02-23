@@ -75,26 +75,58 @@ class PDFController extends Controller
     {
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
+        $local = $request->input('local');
+
         $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
         $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
 
-        $sales = DB::select('SELECT * FROM report_accumulated_day_05(:start_date, :end_date)', [
-            'start_date' => $startDate->format('Y-m-d'),
-            'end_date' => $endDate->format('Y-m-d'),
-        ]);
+        //SELECT * FROM rpt_list_product_sales_accumulate_by_day();
+        // SELECT* FROM  rpt_list_sales_accumulate_by_day();
+        // SELECT* FROM rpt_list_resumen_sales_accumulate_by_day();
 
-        $productNames = [
-            "84 OCT(produc)",
-        ];
+
+        //cabecera
+        // Verifica si startDate y endDate están vacíos y asigna null en ese caso
+        if (empty($startDate)) {
+            $startDate = null;
+        }
+        if (empty($endDate)) {
+            $endDate = null;
+        }
+        // Llama a la función almacenada utilizando la sintaxis correcta para PostgreSQL
+        $headers = DB::select('SELECT * FROM rpt_list_product_sales_accumulate_by_day(?, ?, ?)', [$startDate, $endDate, $local]);
+
+        foreach ($headers as $header) {
+            $header->id_product_v = trim($header->id_product_v);
+            $header->product_name_v = trim($header->product_name_v);
+        }
+
+        $contents = DB::select('SELECT * FROM rpt_list_sales_accumulate_by_day(?, ?, ?)', [$startDate, $endDate, $local]);
+
+        foreach ($contents as $content) {
+            $content->id_product_v = rtrim($content->id_product_v);
+            $content->product_name_v = rtrim($content->product_name_v);
+        }
+
+        $results = DB::select('SELECT * FROM rpt_list_resumen_sales_accumulate_by_day(?, ?, ?)', [$startDate, $endDate, $local]);
+
+
+
+        //contenido
+
+        if (empty($local)) {
+            $local = 'Todos';
+        }
 
         $data = [
             'title' => 'Reportes acumulado diario',
             'date' => date('d/m/Y'),
-            'products_name' => $productNames,
-            'sales' => $sales,
+            'header' => $headers,
             'desde' => $startDate->format('d/m/Y'),
             'hasta' => $endDate->format('d/m/Y'),
-            'establishment' => 'falaser',
+            'establishment' => $local,
+            'content' => $contents,
+            'result' => $results,
             'user' => 'usuarioTest',
         ];
 

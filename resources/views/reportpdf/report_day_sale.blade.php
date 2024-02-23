@@ -1,13 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-<?php
-$pageNumber = 1;
-?>
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte Diario de Ventas</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <title>REPORTE ACUMULADO POR DÍA</title>
+    <link rel stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <style>
         .table thead {
             background-color: #071846;
@@ -19,7 +15,7 @@ $pageNumber = 1;
             text-align: center;
             background-color: #071846;
             margin-bottom: 20px;
-            padding: 1px;
+            padding: 0.5px;
             color: #FFFFFF;
         }
 
@@ -68,8 +64,7 @@ $pageNumber = 1;
 <body>
     <div class="container">
         <div class="header">
-            <h1>{{ $data['title'] }}</h1>
-            <p>Fecha del Reporte: {{ $data['date'] }}</p>
+            <h3>{{ $data['title'] }}</h3>
             <p>Del {{ date('d/m/Y', strtotime($data['desde'])) }} Al {{ date('d/m/Y', strtotime($data['hasta'])) }}</p>
         </div>
 
@@ -80,50 +75,84 @@ $pageNumber = 1;
             </div>
 
             <div class="right-content">
-                <p>Página: {{ $pageNumber }}</p>
+                <p>Página: 1</p>
                 <p>Fecha: {{ $data['date'] }}</p>
                 <p>Hora: {{ date('H:i:s') }}</p>
             </div>
 
-            <div style="clear: both;"></div>
+            <div class="clear"></div>
         </div>
 
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th rowspan="2">Fecha</th>
-                    @foreach($data['products_name'] as $product_name)
-                    <th colspan="2">{{ $product_name }}</th>
+                    @foreach ($data['header'] as $row)
+                    <th colspan="2">{{ $row->product_name_v }}</th>
                     @endforeach
-                    <th colspan="2">Totales</th>
+                    <th colspan="2">TOTAL</th>
                 </tr>
                 <tr>
-                    @foreach($data['products_name'] as $product_name)
+                    @foreach ($data['header'] as $row)
                     <th>GAL</th>
                     <th>SOLES</th>
                     @endforeach
-                    <th>GAL</th>
+                    <th>GALONES</th>
                     <th>SOLES</th>
                 </tr>
             </thead>
 
             <tbody>
-                @foreach($data['sales'] as $sale)
-                <tr>
-                    <td>{{ $sale->fecha }}</td>
-                    @foreach($data['products_name'] as $product_name)
-                    <td>{{ $sale->{$product_name . '-Galones'} }}</td>
-                    <td>{{ $sale->{$product_name . '-Soles'} }}</td>
-                    @endforeach
-                    <td>{{ $sale->{'Total-Galones(delaFila)'} }}</td>
-                    <td>{{ $sale->{'Total-Soles(delaFila)'} }}</td>
-                </tr>
+                @php
+                $dates = [];
+                $totalCantidad = 0;
+                $totalTotal = 0;
+                $posicion = 0;
+                $indice = 0
+                @endphp
+
+
+                @foreach ($data['content'] as $row)
+                    @if (!in_array($row->sale_date_v, $dates))
+                        @if($posicion>1)
+                                <td>{{ number_format($totalCantidad, 3, '.', ',') }}</td>
+                                <td>{{ number_format($totalTotal, 3, '.', ',') }}</td>
+                            </tr>
+                        @endif
+                    <tr>
+                        @php
+                            $totalCantidad += (float)$row->quantity_v;
+                            $totalTotal += (float)$row->total_amount_v;
+                        @endphp
+                        <td>{{ date('d/m/Y', strtotime($row->sale_date_v)) }}</td>
+
+                        @php
+                        $dates[] = $row->sale_date_v;
+                        @endphp
+                    @else
+                        @php
+                            $totalCantidad += (float)$row->quantity_v;
+                            $totalTotal += (float)$row->total_amount_v;
+                        @endphp
+                    @endif
+                    <td>{{ number_format((float)$row->quantity_v, 3, '.', ',') }}</td>
+                    <td>{{ number_format((float)$row->total_amount_v, 3, '.', ',') }}</td>
+                    @php
+                        $posicion = $posicion +1;
+                        $indice = $indice + 1;
+                    @endphp
+                    @if(count($data['content'])==$indice)
+                            <td>{{ number_format($totalCantidad, 3, '.', ',') }}</td>
+                            <td>{{ number_format($totalTotal, 3, '.', ',') }}</td>
+                        </tr>
+                    @endif
+
                 @endforeach
             </tbody>
+
         </table>
     </div>
 </body>
-
 
 <body>
     <table style="width: 50%; margin: 0 auto;" class="table table-bordered">
@@ -135,49 +164,45 @@ $pageNumber = 1;
                 <th>SOLES</th>
             </tr>
         </thead>
-        <tbody>
+@php
+    $totalPromedio = 0;
+    $totalGalones = 0;
+    $totalSoles = 0;
+@endphp
+
+<tbody>
+@foreach ($data['result'] as $result)
+    @php
+        $totalPromedio += floatval($result->average_v);
+        $totalGalones += floatval($result->galones_v);
+        $totalSoles += floatval($result->soles_v);
+    @endphp
+    <tr>
+        <td style="text-align: center;">{{ $result->product_name_v }}</td>
+        <td style="text-align: right;">{{ number_format($result->average_v, 3, '.', ',') }}</td>
+        <td style="text-align: right;">{{ number_format($result->galones_v, 3, '.', ',') }}</td>
+        <td style="text-align: right;">{{ number_format($result->soles_v, 3, '.', ',') }}</td>
+    </tr>
+@endforeach
+</tbody>
+
+<thead>
+    <tr>
+        <th style="text-align: center;">TOTAL </th>
+        <th style="text-align: right;">{{ number_format($totalPromedio, 3, '.', ',') }}</th>
+        <th style="text-align: right;">{{ number_format($totalGalones, 3, '.', ',') }}</th>
+        <th style="text-align: right;">{{ number_format($totalSoles, 3, '.', ',') }}</th>
+    </tr>
+</thead>
+        <!-- <tbody>
             <tr>
-                <td>84 OCTANOS</td>
+                <td style="text-align: center;">GLP (litros)</td>
                 <td>0.00</td>
                 <td>0.0</td>
                 <td>0.00</td>
             </tr>
             <tr>
-                <td>90 OCTANOS</td>
-                <td>0.00</td>
-                <td>0.0</td>
-                <td>0.00</td>
-            </tr>
-            <tr>
-                <td>95 OCTANOS</td>
-                <td>0.00</td>
-                <td>0.0</td>
-                <td>0.00</td>
-            </tr>
-            <tr>
-                <td>97 OCTANOS</td>
-                <td>0.00</td>
-                <td>0.0</td>
-                <td>0.00</td>
-            </tr>
-        </tbody>
-        <thead>
-            <tr>
-                <th>TOTAL </th>
-                <th style="text-align: right;">0.00</than=>
-                <th style="text-align: right;">0.00</th>
-                <th style="text-align: right;">0.00</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>84 OCTANOS</td>
-                <td>0.00</td>
-                <td>0.0</td>
-                <td>0.00</td>
-            </tr>
-            <tr>
-                <td>90 OCTANOS</td>
+                <td style="text-align: center;">GNV (m3)</td>
                 <td>0.00</td>
                 <td>0.0</td>
                 <td>0.00</td>
@@ -185,10 +210,11 @@ $pageNumber = 1;
         </tbody>
         <thead>
             <tr>
-                <th colspan="2">TOTAL</th>
+                <th colspan="2" style="text-align: center;">TOTAL</th>
                 <th colspan="2" style="text-align: right;">0.00</th>
             </tr>
-        </thead>
+        </thead> -->
     </table>
 </body>
+
 </html>
