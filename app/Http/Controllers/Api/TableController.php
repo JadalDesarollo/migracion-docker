@@ -75,14 +75,12 @@ class TableController extends Controller
     {
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
+        $local = $request->input('local');
 
         $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
         $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
 
-        $result = DB::select('SELECT * FROM report_accumulated_day_05(:start_date, :end_date)', [
-            'start_date' => $startDate->format('Y-m-d'), // Usar el formato correcto para la consulta SQL
-            'end_date' => $endDate->format('Y-m-d'),
-        ]);
+        $result = DB::select('SELECT * FROM rpt_list_sales_accumulate_by_day(?, ?, ?)', [$startDate, $endDate, $local]);
 
         return $result;
     }
