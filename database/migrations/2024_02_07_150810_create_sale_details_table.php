@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('sale_details', function (Blueprint $table) {
             $table->id('id_sale_detail');
-            $table->decimal('total_amount');
             $table->decimal('quantity');
-            $table->jsonb('detail_tax')->nullable();
             $table->unsignedBigInteger('id_product');
             $table->unsignedBigInteger('id_sales');
-            $table->decimal('subtotal');
+            $table->decimal('product_price');
+            $table->jsonb('detail_tax')->nullable();
+            //$table->decimal('subtotal');
 
             // Add foreign key constraints if needed
             $table->foreign('id_product')->references('id_product')->on('products')->onDelete('cascade');
-            $table->foreign('id_sales')->references('id_sales')->on('sales')->onDelete('cascade');
+            //$table->foreign('id_sales')->references('id_sales')->on('sales')->onDelete('cascade');
 
             // Primary key constraint
             //$table->primary('id_sale_detail', 'SALE_DETAIL_pk');
