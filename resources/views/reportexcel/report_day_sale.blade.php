@@ -37,23 +37,13 @@
         @foreach ($data['content'] as $row)
         <tr>
             <!-- Ajusta aquí para mostrar los datos correctos -->
-            <td>{{ $row->fecha }}</td>
-            <td>{{ $row->{'84 OCT(produc)-Galones'} }}</td>
-            <td>{{ $row->{'84 OCT(produc)-Soles'} }}</td>
-            <td>{{ $row->{'90 OCT-Galones(produc)'} }}</td>
-            <td>{{ $row->{'90 OCT-Galones(product)'} }}</td>
-            <td>{{ $row->{'95 OCT-Galones(produc)'} }}</td>
-            <td>{{ $row->{'95 OCT-Galones(product)'} }}</td>
-            <td>{{ $row->{'97 OCT-Galones(produc)'} }}</td>
-            <td>{{ $row->{'97 OCT-Galones(product)'} }}</td>
-            <td>{{ $row->{'REGULAR-Galones(produc)'} }}</td>
-            <td>{{ $row->{'REGULAR-Galones(product)'} }}</td>
-            <td>{{ $row->{'PREMIUM(produc)'} }}</td>
-            <td>{{ $row->{'PREMIUM(product)'} }}</td>
-            <td>{{ $row->{'GAS GLP(Galones)'} }}</td>
-            <td>{{ $row->{'GAS GLP(Soles)'} }}</td>
-            <td>{{ $row->{'Total-Galones(delaFila)'} }}</td>
-            <td>{{ $row->{'Total-Soles(delaFila)'} }}</td>
+            <td>asdfasdfasfasfa</td>
+            <td>{{ $row->sale_date_v }}</td>
+            <td>{{ $row->id_local_v }}</td>
+            <td>{{ $row->sale_date_v }}</td>
+            <td>{{ $row->quantity_v }}</td>
+            <td>{{ $row->total_amount_v }}</td>
+            <td>{{ $row->product_name_v }}</td>            
         </tr>
         @endforeach
     </tbody>
