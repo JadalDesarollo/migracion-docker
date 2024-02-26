@@ -137,9 +137,38 @@ class PDFController extends Controller
 
     public function reportSale(Request $request)
     {
-        $pdf = PDF::loadView('reportpdf.report_sale');
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $local = $request->input('local');
 
-        return $pdf->download('reporte-acumulado-diario-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
+        $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+        $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+
+        // Verifica si startDate y endDate están vacíos y asigna null en ese caso
+        if (empty($startDate)) {
+            $startDate = null;
+        }
+        if (empty($endDate)) {
+            $endDate = null;
+        }
+
+        // Consulta SQL corregida
+        $contents = DB::select('SELECT * FROM rpt_sales_report(?, ?, ?)', [$local, $startDate, $endDate]);
+
+        //contenido
+        $data = [
+            'title' => 'Reportes de ventas',
+            'date' => date('d/m/Y'),
+            'desde' => $startDate ? $startDate->format('d/m/Y') : '',
+            'hasta' => $endDate ? $endDate->format('d/m/Y') : '',
+            'establishment' => $local,
+            'content' => $contents,
+            'user' => 'usuarioTest',
+        ];
+
+        $pdf = PDF::loadView('reportpdf.report_sale',  compact('data'));
+
+        return $pdf->download('reporte-sale.pdf');
     }
 
     public function reportSaleDay()
@@ -174,32 +203,40 @@ class PDFController extends Controller
     {
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
+        $local = $request->input('local');
+
         $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
         $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
 
-        $sales = DB::select('SELECT * FROM report_accumulated_day_05(:start_date, :end_date)', [
-            'start_date' => $startDate->format('Y-m-d'),
-            'end_date' => $endDate->format('Y-m-d'),
-        ]);
+        // Verifica si startDate y endDate están vacíos y asigna null en ese caso
+        if (empty($startDate)) {
+            $startDate = null;
+        }
+        if (empty($endDate)) {
+            $endDate = null;
+        }
 
-        $productNames = [
-            "84 OCT(produc)",
-        ];
+        $clientName = null;
+        $documenNumber = null;
+        $situation = null;
 
+        // Consulta SQL corregida
+        $contents = DB::select('SELECT * FROM rtp_document_report(?, ?, ?, ?, ?)', [$clientName, $documenNumber, $startDate, $endDate, $situation]);
+
+        //contenido
         $data = [
-            'title' => 'Reporte de Facturas',
+            'title' => 'Reportes de facturas',
             'date' => date('d/m/Y'),
-            'products_name' => $productNames,
-            'sales' => $sales,
-            'desde' => $startDate->format('d/m/Y'),
-            'hasta' => $endDate->format('d/m/Y'),
-            'establishment' => 'falaser',
+            'desde' => $startDate ? $startDate->format('d/m/Y') : '',
+            'hasta' => $endDate ? $endDate->format('d/m/Y') : '',
+            'establishment' => $local,
+            'content' => $contents,
             'user' => 'usuarioTest',
         ];
 
         $pdf = PDF::loadView('reportpdf.report_invoice',  compact('data'));
 
-        return $pdf->download('reporte-acumulado-diario-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
+        return $pdf->download('reporte-facturas-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
     }
 
     public function reportAdministrative(Request $request)

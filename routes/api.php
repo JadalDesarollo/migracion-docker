@@ -78,6 +78,7 @@ Route::prefix('report')->group(function () {
         Route::post('accumulated/day', [TableController::class, 'reportAccumulatedDayTable']);
         Route::post('sale', [TableController::class, 'reportSale']);
         Route::get('bank', [TableController::class, 'reportBank']);
+        Route::post('invoice', [TableController::class, 'reportInvoice']);
     });
 
     //reportes pdf
@@ -102,6 +103,7 @@ Route::prefix('report')->group(function () {
         Route::post('invoice', [ExcelController::class, 'reportInvoice']);
         Route::post('day', [ExcelController::class, 'reportDay']);
         Route::post('accumulated/day', [ExcelController::class, 'reportAccumulatedDayExcel']);
+        Route::post('sale', [ExcelController::class, 'reportSale']);
         Route::post('administrative', [ExcelController::class, 'reportAdministrative']);
         Route::post('statistical', [ExcelController::class, 'reportStatistical']);
     });

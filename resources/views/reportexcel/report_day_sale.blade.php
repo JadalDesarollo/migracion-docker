@@ -37,13 +37,12 @@
         @foreach ($data['content'] as $row)
         <tr>
             <!-- Ajusta aquí para mostrar los datos correctos -->
-            <td>asdfasdfasfasfa</td>
             <td>{{ $row->sale_date_v }}</td>
             <td>{{ $row->id_local_v }}</td>
             <td>{{ $row->sale_date_v }}</td>
             <td>{{ $row->quantity_v }}</td>
             <td>{{ $row->total_amount_v }}</td>
-            <td>{{ $row->product_name_v }}</td>            
+            <td>{{ $row->product_name_v }}</td>
         </tr>
         @endforeach
     </tbody>

@@ -89,14 +89,12 @@ class TableController extends Controller
     {
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
+        $local = $request->input('local');
 
         $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
         $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
 
-        $result = DB::select('SELECT * FROM report_sales_01(:start_date, :end_date)', [
-            'start_date' => $startDate->format('Y-m-d'), // Usar el formato correcto para la consulta SQL
-            'end_date' => $endDate->format('Y-m-d'),
-        ]);
+        $result = DB::select('SELECT * FROM rpt_sales_report(?, ?, ?)', [$local, $startDate, $endDate]);
 
         return $result;
     }
@@ -137,5 +135,22 @@ class TableController extends Controller
         $pdf = PDF::loadView('reportpdf.report_day_sale',  compact('data'));
 
         return $pdf->download('tutsmake.pdf');
+    }
+
+    public function reportInvoice(Request $request)
+    {
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+
+        $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+        $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+
+        $clientName = null;
+        $documenNumber = null;
+        $situation = null;
+
+        $result = DB::select('SELECT * FROM rtp_document_report(?, ?, ?, ?, ?)', [$clientName, $documenNumber, $startDate, $endDate, $situation]);
+
+        return $result;
     }
 }
