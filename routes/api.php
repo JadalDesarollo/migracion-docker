@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\TableController;
 use App\Http\Controllers\Api\PDFController;
 use App\Http\Controllers\Api\ExcelController;
 use App\Http\Controllers\Api\LocalController;
+use App\Http\Controllers\Api\TenantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,8 +108,10 @@ Route::prefix('report')->group(function () {
         Route::post('administrative', [ExcelController::class, 'reportAdministrative']);
         Route::post('statistical', [ExcelController::class, 'reportStatistical']);
     });
-});
 
+    //tenant
+    Route::post('/register/tenant', [TenantController::class, 'store'])->name('store');
+});
 //reportes table
 //Route::post('report/accumulated/day/table', [TableController::class, 'reportAccumulatedDayTable']);
 // Route::post('report/sale/table', [TableController::class, 'reportSale']);

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use App\Providers\TenancyServiceProvider;
 
 return [
 
@@ -169,6 +170,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         RishiRamawat\PostgresSchema\PostgresqlSchemaServiceProvider::class,
+        TenancyServiceProvider::class,
     ])->toArray(),
 
     /*
