@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tenant;
 use App\Http\Requests\TenantRequest;
+use App\Models\Company;
+use Illuminate\Support\Facades\DB;
 
 class TenantController extends Controller
 {
@@ -20,8 +22,7 @@ class TenantController extends Controller
             return response()->json($tenant);
         } catch (\Exception $e) {
             // Imprime o registra el error para debuggear
-            return($e->getMessage());
+            return ($e->getMessage());
         }
     }
-
 }
