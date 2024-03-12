@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Establishment;
 use App\Models\Product;
 use Carbon\Carbon;
-
+use App\Models\Tenant;
 
 class TableController extends Controller
 {
@@ -76,13 +76,26 @@ class TableController extends Controller
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
         $local = $request->input('local');
+        $company = $request->input('company');
 
-        $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
-        $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+        $tenant = Tenant::whereJsonContains('data->company', $company)->first();
 
-        $result = DB::select('SELECT * FROM rpt_list_sales_accumulate_by_day(?, ?, ?)', [$startDate, $endDate, $local]);
+        if ($tenant) {
+            $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+            $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
 
-        return $result;
+            config(['database.connections.pgsql.database' => $tenant->tenancy_db_name]);
+            DB::reconnect('pgsql');
+
+            $result = DB::select('SELECT * FROM rpt_list_sales_accumulate_by_day(?, ?, ?)', [$startDate, $endDate, $local]);
+
+            config(['database.connections.pgsql.database' => env('DB_DATABASE')]);
+            DB::reconnect('pgsql');
+
+            return $result;
+        } else {
+            return response()->json(['message' => 'No se encontró el inquilino con la empresa proporcionada.'], 404);
+        }
     }
 
     public function reportSale(Request $request)
