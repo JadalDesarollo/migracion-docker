@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('currencies', function (Blueprint $table) {
+        Schema::create('currency', function (Blueprint $table) {
             $table->id('id_currency');
             $table->string('currency_code', 255);
             $table->string('currency_type', 255);
@@ -24,7 +24,7 @@ return new class extends Migration
         });
 
         // Seeder for currencies
-        DB::table('currencies')->insert([
+        DB::table('currency')->insert([
             [
                 'currency_code' => 'PEN',
                 'currency_type' => 'Soles',
@@ -57,6 +57,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('currencies');
+        Schema::dropIfExists('currency');
     }
 };

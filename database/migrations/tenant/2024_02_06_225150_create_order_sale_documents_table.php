@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('order_sale_documents', function (Blueprint $table) {
+        Schema::create('order_sale_document', function (Blueprint $table) {
             $table->id('id_order_sale_document');
             $table->unsignedBigInteger('id_order');
 
@@ -38,7 +38,7 @@ return new class extends Migration
     public function down()
     {
         // Drop table
-        Schema::dropIfExists('order_sale_documents');
+        Schema::dropIfExists('order_sale_document');
 
         // Restore foreign key constraint
         // Schema::table('orders', function (Blueprint $table) {

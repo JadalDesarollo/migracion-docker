@@ -33,7 +33,7 @@ class SalesSeeder extends Seeder
 
         // Insertar datos en la tabla employees
         foreach (range(1, 50) as $index) {
-            DB::table('employees')->insert([
+            DB::table('employee')->insert([
                 'id_person' => $faker->unique()->randomNumber(5),
                 'id_user_view' => $faker->numberBetween(1, 100), // Utilizar valores existentes de user_views
                 'first_name' => $faker->firstName,

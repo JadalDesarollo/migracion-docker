@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sales', function (Blueprint $table) {
+        Schema::create('sale', function (Blueprint $table) {
             $table->id('id_sales');
             $table->string('pos_id', 45); //no está
             $table->string('state');
@@ -33,18 +33,18 @@ return new class extends Migration
 
             // Primary key constraint
             //$table->primary('id_sales', 'SALES_pk');
-            $table->foreign('id_sale_detail')->references('id_sale_detail')->on('sale_details')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('id_user_view')->references('id_user_view')->on('user_views')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('id_employee')->references('id_employee')->on('employees')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('id_local')->references('id_local')->on('locals')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_sale_detail')->references('id_sale_detail')->on('sale_detail')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_user_view')->references('id_user_view')->on('user_view')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_employee')->references('id_employee')->on('employee')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_local')->references('id_local')->on('local')->onDelete('cascade')->onUpdate('cascade');
 
             // Inheritance from transaction table
-            $table->foreign('id_transaction')->references('id_transaction')->on('transactions')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_transaction')->references('id_transaction')->on('transaction')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
 
         // Ejecuta SQL puro para agregar herencia
-        DB::statement('ALTER TABLE sales INHERIT transactions;');
+        DB::statement('ALTER TABLE sale INHERIT transaction;');
     }
 
     /**
@@ -52,6 +52,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sales');
+        Schema::dropIfExists('sale');
     }
 };

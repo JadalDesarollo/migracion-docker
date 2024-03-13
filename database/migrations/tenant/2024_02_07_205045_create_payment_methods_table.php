@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_methods', function (Blueprint $table) {
+        Schema::create('payment_method', function (Blueprint $table) {
             $table->smallInteger('id_payment_method')->primary();
             $table->string('name', 45)->nullable();
             $table->string('description', 255)->nullable();
@@ -20,7 +20,7 @@ return new class extends Migration
         });
 
         // Seeder for payment_methods
-        DB::table('payment_methods')->insert([
+        DB::table('payment_method')->insert([
             [
                 'id_payment_method' => '01',
                 'name' => 'Efectivo',
@@ -106,6 +106,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_methods');
+        Schema::dropIfExists('payment_method');
     }
 };

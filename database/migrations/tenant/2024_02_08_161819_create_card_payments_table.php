@@ -12,14 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('card_payments', function (Blueprint $table) {
+        Schema::create('card_payment', function (Blueprint $table) {
             $table->id('id_card_payment');
             $table->unsignedBigInteger('id_payment');
             $table->unsignedBigInteger('id_card');
             $table->timestamps();
 
             // Constraints
-            $table->foreign('id_payment')->references('id_payment')->on('payments')->onDelete('cascade');
+            $table->foreign('id_payment')->references('id_payment')->on('payment')->onDelete('cascade');
             //$table->foreign('id_card')->references('id')->on('cards')->onDelete('cascade');
 
             // Primary key constraint
@@ -40,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('card_payments');
+        Schema::dropIfExists('card_payment');
     }
 };

@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_documents', function (Blueprint $table) {
+        Schema::create('sale_document', function (Blueprint $table) {
             $table->id('id_sale_document');
             $table->unsignedBigInteger('id_sales');
             $table->unsignedBigInteger('id_order_sale_document')->nullable();
 
             // Foreign key constraints
-            $table->foreign('id_order_sale_document')->references('id_order_sale_document')->on('order_sale_documents')->onDelete('cascade');
-            $table->foreign('id_sales')->references('id_sales')->on('sales')->onDelete('cascade');
+            $table->foreign('id_order_sale_document')->references('id_order_sale_document')->on('order_sale_document')->onDelete('cascade');
+            $table->foreign('id_sales')->references('id_sales')->on('sale')->onDelete('cascade');
             //$table->foreign('id_sales')->references('id')->on('sales')->onDelete('cascade');
             //$table->foreign('id_order_sale_document')->references('id_order_sale_document')->on('order_sale_documents')->onDelete('cascade');
 
             //INHERIT
-            $table->integer('sales');
+            $table->integer('sale');
             $table->integer('sale_document');
             $table->integer('order_sale_document');
 
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sale_documents');
+        Schema::dropIfExists('sale_document');
     }
 };

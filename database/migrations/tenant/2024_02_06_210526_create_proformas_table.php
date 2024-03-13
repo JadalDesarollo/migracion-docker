@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('proformas', function (Blueprint $table) {
+        Schema::create('proforma', function (Blueprint $table) {
             $table->id('id_proforma');
             $table->date('broadcast_date');
             $table->unsignedBigInteger('id_currency');
@@ -24,12 +24,12 @@ return new class extends Migration
             //$table->softDeletes();
 
             // Define foreign key constraints
-            $table->foreign('id_currency')->references('id_currency')->on('currencies')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('id_local')->references('id_local')->on('locals')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('id_transaction')->references('id_transaction')->on('transactions')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_currency')->references('id_currency')->on('currency')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_local')->references('id_local')->on('local')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_transaction')->references('id_transaction')->on('transaction')->onDelete('cascade')->onUpdate('cascade');
         });
         // Ejecuta SQL puro para agregar herencia
-        DB::statement('ALTER TABLE proformas INHERIT transactions');
+        DB::statement('ALTER TABLE proforma INHERIT transaction');
     }
 
     /**

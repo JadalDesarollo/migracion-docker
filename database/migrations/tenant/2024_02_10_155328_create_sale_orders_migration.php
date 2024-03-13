@@ -12,14 +12,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pushaser_order', function (Blueprint $table) {
-            $table->id();
-            // Agrega las columnas id_sale_document, id_sales, id_order_sale_document si es necesario
-            $table->unsignedBigInteger('id_sale_document');
-            $table->unsignedBigInteger('id_sales');
-            $table->unsignedBigInteger('id_order_sale_document');
+        Schema::create('sale_order', function (Blueprint $table) {
+            $table->smallInteger('id_sale_order');
+            $table->string('observations',255);
 
             // Add missing columns for inheritance
+            $table->unsignedBigInteger('id_sale_document');
+            $table->timestamp('date')->nullable();
+            $table->string('document_number')->nullable();
+            $table->date('broadcast_date')->nullable();
+            $table->string('situation', 255)->nullable();
+            $table->unsignedBigInteger('id_sales');
+
+            //add
+            $table->unsignedBigInteger('id_order_sale_document')->nullable();
             $table->integer('sale');
             $table->integer('sale_document');
             $table->integer('order_sale_document');
@@ -27,7 +33,7 @@ return new class extends Migration
             $table->timestamps();
         });
         // Ejecuta SQL puro para agregar herencia
-        DB::statement('ALTER TABLE pushaser_order INHERIT sale_document;');
+        DB::statement('ALTER TABLE sale_order INHERIT sale_document;');
     }
 
     /**
@@ -35,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pushaser_orders');
+        Schema::dropIfExists('sale_order');
     }
 };

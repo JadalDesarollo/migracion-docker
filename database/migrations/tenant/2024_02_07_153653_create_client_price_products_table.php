@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('client_price_products', function (Blueprint $table) {
+        Schema::create('client_price_product', function (Blueprint $table) {
             $table->id('id_client_price_product');
             $table->unsignedBigInteger('id_product');
             $table->unsignedBigInteger('id_client');
             $table->decimal('price');
             $table->unsignedBigInteger('id_currency');
 
-            $table->foreign('id_product')->references('id_product')->on('products')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('id_product')->references('id_product')->on('product')->onDelete('set null')->onUpdate('cascade');
             // Add foreign key constraint for id_client referencing clients table
-            $table->foreign('id_client')->references('id_client')->on('clients')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_client')->references('id_client')->on('client')->onDelete('cascade')->onUpdate('cascade');
             // Add foreign key constraint for idcurrency referencing currencies table
-            $table->foreign('id_currency')->references('id_currency')->on('currencies')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_currency')->references('id_currency')->on('currency')->onDelete('cascade')->onUpdate('cascade');
 
             $table->timestamps();
         });
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('client_price_products');
+        Schema::dropIfExists('client_price_product');
     }
 };

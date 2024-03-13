@@ -12,29 +12,29 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // DB::unprepared('
-        //     CREATE OR REPLACE VIEW sales_summary_daily AS
-        //     SELECT
-        //         s.id_local,
-        //         s.date::DATE AS sale_date,
-        //         sd.id_product,
-        //         SUM(sd.quantity) AS quantity,
-        //         SUM(sd.product_price) AS total_amount,
-        //         p.foreign_name AS product_name
-        //     FROM
-        //         sales s
-        //     JOIN
-        //         sale_detail sd ON s.id_sales = sd.id_sales
-        //     JOIN
-        //         product p ON p.id_product = sd.id_product
-        //     WHERE p.group_code = \'00999\'
-        //     GROUP BY
-        //         sd.id_product,
-        //         s.date::DATE,
-        //         p.foreign_name,
-        //         s.id_local
-        //     ORDER BY sale_date ASC;
-        // ');
+        DB::unprepared('
+            CREATE OR REPLACE VIEW sales_summary_daily AS
+            SELECT
+                s.id_local,
+                s.date::DATE AS sale_date,
+                sd.id_product,
+                SUM(sd.quantity) AS quantity,
+                SUM(sd.product_price) AS total_amount,
+                p.foreign_name AS product_name
+            FROM
+                sale s
+            JOIN
+                sale_detail sd ON s.id_sales = sd.id_sales
+            JOIN
+                product p ON p.id_product = sd.id_product
+            WHERE p.group_code = \'00999\'
+            GROUP BY
+                sd.id_product,
+                s.date::DATE,
+                p.foreign_name,
+                s.id_local
+            ORDER BY sale_date ASC;
+        ');
 
         DB::unprepared('
             CREATE OR REPLACE FUNCTION rpt_list_product_sales_accumulate_by_day(

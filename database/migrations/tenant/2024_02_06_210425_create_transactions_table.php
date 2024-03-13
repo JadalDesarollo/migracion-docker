@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('transaction', function (Blueprint $table) {
             $table->id('id_transaction')->unique();
             $table->unsignedBigInteger('id_user_view')->nullable();
             $table->unsignedBigInteger('id_employee')->nullable();
 
-            $table->foreign('id_user_view')->references('id_user_view')->on('user_views')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('id_user_view')->references('id_user_view')->on('user_view')->onDelete('set null')->onUpdate('cascade');
 
             // $table->foreign('id_employee')
             //     ->references('id_employee')
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('transaction');
     }
 };

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tax_types', function (Blueprint $table) {
+        Schema::create('tax_type', function (Blueprint $table) {
             $table->id('id_type_tax');
             $table->timestamps();
         });
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tax_types');
+        Schema::dropIfExists('tax_type');
     }
 };

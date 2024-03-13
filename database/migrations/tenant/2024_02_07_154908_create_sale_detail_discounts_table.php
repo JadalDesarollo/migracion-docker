@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_detail_discounts', function (Blueprint $table) {
+        Schema::create('sale_detail_discount', function (Blueprint $table) {
             $table->id('id_sale_detail_discount');
             $table->unsignedSmallInteger('id_sale_detail');
             $table->unsignedBigInteger('id_discount');
 
             // Add foreign key constraint for id_sale_detail referencing sale_details table
-            $table->foreign('id_sale_detail')->references('id_sale_detail')->on('sale_details')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_sale_detail')->references('id_sale_detail')->on('sale_detail')->onDelete('cascade')->onUpdate('cascade');
             // Add foreign key constraint for iddiscount referencing discounts table
-            $table->foreign('id_discount')->references('id_discount')->on('discounts')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_discount')->references('id_discount')->on('discount')->onDelete('cascade')->onUpdate('cascade');
 
             $table->timestamps();
         });
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sale_detail_discounts');
+        Schema::dropIfExists('sale_detail_discount');
     }
 };

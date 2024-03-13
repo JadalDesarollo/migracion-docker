@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('drivers', function (Blueprint $table) {
+        Schema::create('driver', function (Blueprint $table) {
             $table->id('id_driver');
             $table->string('license', 45);
             $table->unsignedBigInteger('id_person');
@@ -39,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('drivers');
+        Schema::dropIfExists('driver');
     }
 };

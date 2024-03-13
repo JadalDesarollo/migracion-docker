@@ -12,14 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_boletas', function (Blueprint $table) {
+        Schema::create('sale_boleta', function (Blueprint $table) {
             $table->id();
             $table->string('boleta_number', 45);
             $table->date('broadcast_date');
             $table->string('description', 255);
 
             // Add missing columns for inheritance
-            $table->integer('sales');
+            $table->integer('sale');
             $table->integer('sale_document');
             $table->integer('order_sale_document');
 
@@ -32,7 +32,7 @@ return new class extends Migration
         });
 
         // Agrega la herencia
-        DB::statement('ALTER TABLE sale_boletas INHERIT sale_documents');
+        DB::statement('ALTER TABLE sale_boleta INHERIT sale_document');
     }
 
     /**

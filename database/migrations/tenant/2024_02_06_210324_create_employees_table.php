@@ -12,9 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('employee');
 
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('employee', function (Blueprint $table) {
             $table->id('id_employee');
             $table->unsignedBigInteger('id_person');
             $table->unsignedBigInteger('id_user_view')->nullable(); // id_user_view
@@ -37,7 +37,7 @@ return new class extends Migration
         });
 
         // Execute raw SQL to inherit from person
-        DB::statement('ALTER TABLE employees INHERIT persons;');
+        DB::statement('ALTER TABLE employee INHERIT person;');
     }
 
     /**
@@ -45,6 +45,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('employee');
     }
 };

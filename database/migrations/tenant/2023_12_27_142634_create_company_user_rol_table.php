@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('rol_id');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+            $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');
             $table->foreign('rol_id')->references('id')->on('roles')->onDelete('cascade');
 
            // $table->unique(['user_id', 'company_id']);

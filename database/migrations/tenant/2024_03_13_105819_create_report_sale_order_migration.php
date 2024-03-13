@@ -12,49 +12,49 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // DB::unprepared('
-        //     CREATE OR REPLACE VIEW view_list_sale_order AS
-        //     SELECT
-        //         s.pos_id AS pos_v,
-        //         so.document_number AS document_number,
-        //         c.first_name AS client_v,
-        //         c.id_client AS id_client_v,
-        //         c.document_number AS document_client_v,
-        //         so.date AS date_v,
-        //         json_agg(
-        //             json_build_object(
-        //                 \'product\',
-        //                 p.foreign_name,
-        //                 \'quantity\',
-        //                 sd.quantity
-        //             )
-        //         ) AS sale_detail_v,
-        //         s.total_Amount AS total_v,
-        //         d.first_name AS driver_v,
-        //         v.vehicle_plate AS placa_v
-        //     FROM
-        //         sale_order AS so
-        //         INNER JOIN sales AS s ON s.id_sales = so.id_sales
-        //         INNER JOIN client_sale AS cs ON cs.id_sales = s.id_sales
-        //         INNER JOIN client AS c On c.id_client = cs.id_client
-        //         LEFT JOIN sale_detail AS sd ON sd.id_sales = so.id_sales
-        //         INNER JOIN product AS p ON sd.id_product = p.id_product
-        //         LEFT JOIN driver_sale AS ds ON ds.id_sales = s.id_sales
-        //         LEFT JOIN driver AS d ON d.id_driver = ds.id_driver
-        //         LEFT JOIN vehicle AS v ON v.id_vehicle = ds.id_vehicle
-        //     GROUP BY
-        //         so.document_number,
-        //         so.date,
-        //         s.total_Amount,
-        //         d.first_name,
-        //         v.vehicle_plate,
-        //         s.pos_id,
-        //         c.first_name,
-        //         c.document_number,
-        //         c.id_client
-        //     ORDER BY
-        //         so.date ASC;
-        // ');
+        DB::unprepared('
+            CREATE OR REPLACE VIEW view_list_sale_order AS
+            SELECT
+                s.pos_id AS pos_v,
+                so.document_number AS document_number,
+                c.first_name AS client_v,
+                c.id_client AS id_client_v,
+                c.document_number AS document_client_v,
+                so.date AS date_v,
+                json_agg(
+                    json_build_object(
+                        \'product\',
+                        p.foreign_name,
+                        \'quantity\',
+                        sd.quantity
+                    )
+                ) AS sale_detail_v,
+                s.total_Amount AS total_v,
+                d.first_name AS driver_v,
+                v.vehicle_plate AS placa_v
+            FROM
+                sale_order AS so
+                INNER JOIN sale AS s ON s.id_sales = so.id_sales
+                INNER JOIN client_sale AS cs ON cs.id_sales = s.id_sales
+                INNER JOIN client AS c On c.id_client = cs.id_client
+                LEFT JOIN sale_detail AS sd ON sd.id_sales = so.id_sales
+                INNER JOIN product AS p ON sd.id_product = p.id_product
+                LEFT JOIN driver_sale AS ds ON ds.id_sales = s.id_sales
+                LEFT JOIN driver AS d ON d.id_driver = ds.id_driver
+                LEFT JOIN vehicle AS v ON v.id_vehicle = ds.id_vehicle
+            GROUP BY
+                so.document_number,
+                so.date,
+                s.total_Amount,
+                d.first_name,
+                v.vehicle_plate,
+                s.pos_id,
+                c.first_name,
+                c.document_number,
+                c.id_client
+            ORDER BY
+                so.date ASC;
+        ');
 
         DB::unprepared('
             CREATE OR REPLACE FUNCTION list_client_order_sale(

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('company', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('identity_document_type_id');
             $table->string('number', 255);
@@ -41,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('company');
     }
 };

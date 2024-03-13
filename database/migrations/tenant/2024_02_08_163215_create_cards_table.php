@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cards', function (Blueprint $table) {
+        Schema::create('card', function (Blueprint $table) {
             $table->id('id_card');
             $table->string('name');
             $table->string('description');
@@ -29,7 +29,7 @@ return new class extends Migration
         });
 
         // Seeder for cards
-        DB::table('cards')->insert([
+        DB::table('card')->insert([
             [
                 'name' => 'Visa',
                 'description' => 'Visa',
@@ -54,6 +54,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cards');
+        Schema::dropIfExists('card');
     }
 };

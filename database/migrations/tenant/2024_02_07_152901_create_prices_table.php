@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('prices', function (Blueprint $table) {
+        Schema::create('price', function (Blueprint $table) {
             $table->id('id_price');
             $table->unsignedBigInteger('id_product');
             $table->unsignedBigInteger('id_currency');
@@ -23,10 +23,10 @@ return new class extends Migration
             //$table->primary('id_price', 'price_pk');
 
             // Foreign key constraints
-            $table->foreign('id_product')->references('id_product')->on('products')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('id_currency')->references('id_currency')->on('currencies')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_product')->references('id_product')->on('product')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_currency')->references('id_currency')->on('currency')->onDelete('cascade')->onUpdate('cascade');
             // Si hay una relación uno a uno con list_prices, también agregue la siguiente línea:
-            $table->foreign('id_list_price')->references('id_list_price')->on('price_lists')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_list_price')->references('id_list_price')->on('price_list')->onDelete('cascade')->onUpdate('cascade');
         });
 
         // Set owner of the table

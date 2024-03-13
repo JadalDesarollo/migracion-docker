@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('payment', function (Blueprint $table) {
             $table->id('id_payment');
             $table->smallInteger('id_payment_method')->nullable();
             $table->unsignedBigInteger('id_sales')->nullable();
             $table->unsignedBigInteger('id_currency')->nullable();
 
             // Constraints
-            $table->foreign('id_sales')->references('id_sales')->on('sales')->onDelete('cascade');
-            $table->foreign('id_payment_method')->references('id_payment_method')->on('payment_methods')->onDelete('cascade');
-            $table->foreign('id_currency')->references('id_currency')->on('currencies')->onDelete('cascade');
+            $table->foreign('id_sales')->references('id_sales')->on('sale')->onDelete('cascade');
+            $table->foreign('id_payment_method')->references('id_payment_method')->on('payment_method')->onDelete('cascade');
+            $table->foreign('id_currency')->references('id_currency')->on('currency')->onDelete('cascade');
 
             // Primary key constraint (alternatively you can use id() or increments() instead of id_payment)
             // $table->primary('id_payment');
@@ -40,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('payment');
     }
 };

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('person_addresses', function (Blueprint $table) {
+        Schema::create('person_address', function (Blueprint $table) {
             $table->id('id_person_address');
             $table->unsignedBigInteger('person_id');
             $table->unsignedBigInteger('address_id');
@@ -20,8 +20,8 @@ return new class extends Migration
             //$table->primary('id_person_address', 'person_address_pk');
 
             // Foreign key constraints
-            $table->foreign('person_id')->references('id_person')->on('persons')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('address_id')->references('id_address')->on('addresses')->onDelete('cascade');
+            $table->foreign('person_id')->references('id_person')->on('person')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('address_id')->references('id_address')->on('address')->onDelete('cascade');
         });
 
         // Set owner of the table
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('person_addresses');
+        Schema::dropIfExists('person_address');
     }
 };

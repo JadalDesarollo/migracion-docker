@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('order', function (Blueprint $table) {
             $table->id('id_order');
             $table->unsignedBigInteger('id_transaction');
             $table->unsignedBigInteger('id_user_view')->nullable();
@@ -30,16 +30,16 @@ return new class extends Migration
            //$table->foreign('id_order')->references('id_order_sale_document')->on('order_sale_documents')->onDelete('cascade')->onUpdate('cascade');
 
            // Foreign key constraint for id_transaction
-           $table->foreign('id_transaction')->references('id_transaction')->on('transactions')->onDelete('cascade')->onUpdate('cascade');
-           $table->foreign('id_proforma')->references('id_proforma')->on('proformas')->onDelete('cascade')->onUpdate('cascade');
-           $table->foreign('id_order_sale_document')->references('id_order_sale_document')->on('order_sale_documents')->onDelete('cascade')->onUpdate('cascade');
+           $table->foreign('id_transaction')->references('id_transaction')->on('transaction')->onDelete('cascade')->onUpdate('cascade');
+           $table->foreign('id_proforma')->references('id_proforma')->on('proforma')->onDelete('cascade')->onUpdate('cascade');
+           $table->foreign('id_order_sale_document')->references('id_order_sale_document')->on('order_sale_document')->onDelete('cascade')->onUpdate('cascade');
 
            // Primary key constraint
            #$table->primary('id_order', 'order_pk');
            $table->timestamps();
         });
         // Ejecuta SQL puro para agregar herencia
-        DB::statement('ALTER TABLE orders INHERIT transactions;');
+        DB::statement('ALTER TABLE "order" INHERIT transaction;');
     }
 
     /**
@@ -47,6 +47,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('order');
     }
 };

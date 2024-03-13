@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('capitals', function (Blueprint $table) {
+        Schema::create('capital', function (Blueprint $table) {
             $table->increments('id');
             $table->string('state');
             $table->string('name');
@@ -22,7 +22,7 @@ return new class extends Migration
         });
 
         // Ejecuta SQL puro para agregar herencia
-        DB::statement('ALTER TABLE capitals INHERIT cities;');
+        DB::statement('ALTER TABLE capital INHERIT city;');
     }
 
     /**
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('capitals');
+        Schema::dropIfExists('capital');
     }
 };

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_facturas', function (Blueprint $table) {
+        Schema::create('sale_factura', function (Blueprint $table) {
             $table->smallInteger('factura_number');
             $table->date('broadcast_date');
             $table->date('expiration_date');
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('observations', 255);
 
             // Add missing columns for inheritance
-            $table->integer('sales');
+            $table->integer('sale');
             $table->integer('sale_document');
             $table->integer('order_sale_document');
 
@@ -40,7 +40,7 @@ return new class extends Migration
             $table->timestamps();
         });
         // Ejecuta SQL puro para agregar herencia
-        DB::statement('ALTER TABLE sale_facturas INHERIT sale_documents;');
+        DB::statement('ALTER TABLE sale_factura INHERIT sale_document;');
         // Set owner of the table
        //DB::statement('ALTER TABLE sale_facturas OWNER TO postgres');
     }
@@ -50,6 +50,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sale_facturas');
+        Schema::dropIfExists('sale_factura');
     }
 };

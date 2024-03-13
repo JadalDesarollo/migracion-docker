@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tax_type_products', function (Blueprint $table) {
+        Schema::create('tax_type_product', function (Blueprint $table) {
             $table->id('id_tax_type_product');
             $table->unsignedBigInteger('id_type_tax');
             $table->unsignedBigInteger('id_product');
             $table->timestamps();
 
-            $table->foreign('id_type_tax')->references('id_type_tax')->on('tax_types')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('id_product')->references('id_product')->on('products')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_type_tax')->references('id_type_tax')->on('tax_type')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_product')->references('id_product')->on('product')->onDelete('cascade')->onUpdate('cascade');
         });
 
         //DB::statement('ALTER TABLE tax_type_products OWNER TO postgres');
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tax_type_products');
+        Schema::dropIfExists('tax_type_product');
     }
 };

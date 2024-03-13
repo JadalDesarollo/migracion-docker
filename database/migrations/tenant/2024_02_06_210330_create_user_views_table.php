@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_views', function (Blueprint $table) {
+        Schema::create('user_view', function (Blueprint $table) {
             $table->id('id_user_view');
             $table->timestamps();
         });
 
-        Schema::table('employees', function (Blueprint $table) {
-            $table->foreign('id_user_view')->references('id_user_view')->on('user_views')->onDelete('cascade');
+        Schema::table('employee', function (Blueprint $table) {
+            $table->foreign('id_user_view')->references('id_user_view')->on('user_view')->onDelete('cascade');
         });
     }
 
@@ -26,10 +26,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('employees', function (Blueprint $table) {
+        Schema::table('employee', function (Blueprint $table) {
             $table->dropForeign(['id_user_view']);
         });
 
-        Schema::dropIfExists('user_views');
+        Schema::dropIfExists('user_view');
     }
 };

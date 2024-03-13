@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_details', function (Blueprint $table) {
+        Schema::create('sale_detail', function (Blueprint $table) {
             $table->id('id_sale_detail');
             $table->decimal('quantity');
             $table->unsignedBigInteger('id_product');
@@ -21,7 +21,7 @@ return new class extends Migration
             //$table->decimal('subtotal');
 
             // Add foreign key constraints if needed
-            $table->foreign('id_product')->references('id_product')->on('products')->onDelete('cascade');
+            $table->foreign('id_product')->references('id_product')->on('product')->onDelete('cascade');
             //$table->foreign('id_sales')->references('id_sales')->on('sales')->onDelete('cascade');
 
             // Primary key constraint

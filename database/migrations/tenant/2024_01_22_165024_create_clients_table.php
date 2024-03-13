@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('client', function (Blueprint $table) {
             $table->id('id_client');
             $table->string('client_code');
             $table->string('ruc');
@@ -45,6 +45,16 @@ return new class extends Migration
             $table->string('migration_flag');
             $table->string('migration_id');
             $table->timestamps();
+
+            // Add missing columns
+            $table->integer('id_type_client');
+            $table->integer('id_person');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('document_number');
+            $table->string('telphone_number');
+            $table->boolean('state');
+            $table->integer('id_document_type');
         });
     }
 
@@ -53,6 +63,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clients');
+        Schema::dropIfExists('client');
     }
 };
