@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+use Illuminate\Support\Facades\DB;
 return new class extends Migration
 {
     /**
@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('client', function (Blueprint $table) {
             $table->id('id_client');
+            $table->unsignedBigInteger('id_person');
             $table->string('client_code');
             $table->string('ruc');
             $table->string('company_name');
-            $table->string('address');
+            //$table->string('address');
             $table->string('district_code');
             $table->string('department_code');
             $table->string('zone_code');
@@ -29,7 +30,7 @@ return new class extends Migration
             $table->string('amount_limit');
             $table->string('available_amount');
             $table->string('credit_blocked');
-            $table->string('email');
+            //$table->string('email');
             $table->date('birth_date');
             $table->string('warehouse_code');
             $table->string('customer_type');
@@ -38,7 +39,7 @@ return new class extends Migration
             $table->string('Sunat_Update');
             $table->string('client');
             $table->string('contact');
-            $table->timestamp('creation_date');
+            //$table->timestamp('creation_date');
             $table->string('ROUTE_GROUP');
             $table->string('sunat_query');
             $table->string('BEACH');
@@ -46,16 +47,21 @@ return new class extends Migration
             $table->string('migration_id');
             $table->timestamps();
 
-            // Add missing columns
-            $table->integer('id_type_client');
-            $table->integer('id_person');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('document_number');
-            $table->string('telphone_number');
-            $table->boolean('state');
-            $table->integer('id_document_type');
+            // Add inherit
+            $table->string('first_name', 80);
+            $table->string('last_name', 80);
+            $table->string('address', 45);
+            $table->string('document_number', 45);
+            $table->string('telphone_number', 45);
+            $table->string('email', 45);
+            $table->boolean('state')->default(true);
+            $table->date('date_of_birth');
+            $table->date('creation_date');
+            $table->unsignedBigInteger('id_document_type');
         });
+
+        // Execute raw SQL to inherit from person
+        DB::statement('ALTER TABLE client INHERIT person;');
     }
 
     /**
