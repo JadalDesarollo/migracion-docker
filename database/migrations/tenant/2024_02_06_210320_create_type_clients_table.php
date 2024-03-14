@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -18,10 +19,17 @@ return new class extends Migration
 
             // Primary key constraint
             //$table->primary('id_type_client', 'type_client_pk');
+            $table->timestamps();
         });
 
         // Set owner of the table
         //DB::statement('ALTER TABLE type_clients OWNER TO postgres');
+
+        // Insertar datos por defecto en la tabla type_client
+        DB::table('type_client')->insert([
+            'name' => 'type 1',
+            'description' => 'descripción tipo test'
+        ]);
     }
 
     /**

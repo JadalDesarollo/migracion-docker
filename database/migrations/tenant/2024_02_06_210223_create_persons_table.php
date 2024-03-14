@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id('id_person');
             $table->string('first_name', 80);
             $table->string('last_name', 80);
-            $table->string('address', 45);
             $table->string('document_number', 45);
             $table->string('telphone_number', 45);
             $table->string('email', 45);

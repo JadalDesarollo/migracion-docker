@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('person_address', function (Blueprint $table) {
             $table->id('id_person_address');
-            $table->unsignedBigInteger('person_id');
-            $table->unsignedBigInteger('address_id');
+            $table->unsignedBigInteger('id_person');
+            $table->unsignedBigInteger('id_address');
 
             // Primary key constraint
             //$table->primary('id_person_address', 'person_address_pk');
 
             // Foreign key constraints
-            $table->foreign('person_id')->references('id_person')->on('person')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('address_id')->references('id_address')->on('address')->onDelete('cascade');
+            $table->foreign('id_person')->references('id_person')->on('person')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_address')->references('id_address')->on('address')->onDelete('cascade');
         });
 
         // Set owner of the table
