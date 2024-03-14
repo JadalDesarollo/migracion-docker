@@ -154,16 +154,30 @@ class TableController extends Controller
     {
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
+        $company = $request->input('company');
 
-        $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
-        $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+        $tenant = Tenant::whereJsonContains('data->company', $company)->first();
 
-        $clientName = null;
-        $documenNumber = null;
-        $situation = null;
+        if ($tenant) {
+            $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+            $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
 
-        $result = DB::select('SELECT * FROM rtp_document_report(?, ?, ?, ?, ?)', [$clientName, $documenNumber, $startDate, $endDate, $situation]);
+            $clientName = null;
+            $documenNumber = null;
+            $situation = null;
 
-        return $result;
+            config(['database.connections.pgsql.database' => $tenant->tenancy_db_name]);
+            DB::reconnect('pgsql');
+
+            $result = DB::select('SELECT * FROM rtp_document_report(?, ?, ?, ?, ?)', [$clientName, $documenNumber, $startDate, $endDate, $situation]);
+
+            config(['database.connections.pgsql.database' => env('DB_DATABASE')]);
+            DB::reconnect('pgsql');
+
+            return $result;
+        } else {
+            return response()->json(['message' => 'No se encontró el inquilino con la empresa proporcionada.'], 404);
+        }
+
     }
 }

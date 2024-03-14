@@ -4,14 +4,14 @@
 -- Project Site: pgmodeler.io
 -- Model Author: Jadal Global
 
--- Database creation must be performed outside a multi lined SQL file. 
+-- Database creation must be performed outside a multi lined SQL file.
 -- These commands were put in this file only as a convenience.
--- 
+--
 -- -- object: "DBJS_GLOBAL" | type: DATABASE --
 -- -- DROP DATABASE IF EXISTS "DBJS_GLOBAL";
 -- CREATE DATABASE "DBJS_GLOBAL";
 -- -- ddl-end --
--- 
+--
 
 -- object: public.person | type: TABLE --
 -- DROP TABLE IF EXISTS public.person CASCADE;
@@ -1006,5 +1006,351 @@ ALTER TABLE public.sale ADD CONSTRAINT sale_document_type_fk FOREIGN KEY (docume
 REFERENCES public.sale_document_type (document_code) MATCH FULL
 ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
+
+-- SELECT * FROM sales
+-- SELECT * FROM sale_detail
+-- DROP VIEW sales_summary_daily;
+CREATE OR REPLACE VIEW sales_summary_daily AS
+SELECT
+	s.id_local,
+    s.date::DATE AS sale_date,
+    sd.id_product,
+	SUM(sd.quantity) AS quantity,
+    SUM(sd.product_price) AS total_amount,
+	p.foreign_name AS product_name
+FROM
+    sales s
+JOIN
+    sale_detail sd ON s.id_sales = sd.id_sales
+JOIN
+	product p ON p.id_product = sd.id_product
+WHERE p.group_code ='00999'
+GROUP BY
+  	sd.id_product,
+    s.date::DATE,
+	p.foreign_name,
+	s.id_local
+ORDER BY sale_date ASC;
+
+--SELECT* from  sales_summary_daily
+--SELECT* FROM rpt_list_product_sales_accumulate_by_day()
+--DROP FUNCTION rpt_list_product_sales_accumulate_by_day(date,date,integer)
+CREATE OR REPLACE FUNCTION rpt_list_product_sales_accumulate_by_day(
+	p_start_date DATE DEFAULT NULL::DATE,
+	p_end_date DATE DEFAULT NULL::DATE,
+	p_id_local INTEGER DEFAULT NULL::INTEGER
+) RETURNS TABLE (
+	id_product_v VARCHAR,
+	product_name_v VARCHAR
+)AS $$
+	BEGIN
+	RETURN QUERY
+	SELECT
+		DISTINCT
+			id_product::VARCHAR as id_product_v,
+			product_name as product_name_v
+	FROM sales_summary_daily sacc
+	WHERE (p_start_date IS NULL OR sacc.sale_date::DATE BETWEEN p_start_date AND COALESCE(p_end_date,CURRENT_DATE))
+	AND (p_id_local IS NULL OR p_id_local= sacc.id_local);
+
+	END
+$$ LANGUAGE PLPGSQL;
+--*********************************************************
+--  DROP FUNCTION rpt_list_sales_accumulate_by_day(date,date,integer)
+CREATE OR REPLACE FUNCTION rpt_list_sales_accumulate_by_day(
+	p_start_date DATE DEFAULT NULL::DATE,
+	p_end_date DATE DEFAULT NULL::DATE,
+	p_id_local INTEGER DEFAULT NULL::INTEGER
+) RETURNS TABLE (
+	id_local_v VARCHAR,
+	sale_date_v DATE,
+	id_product_v VARCHAR,
+	quantity_v DECIMAL,
+	total_amount_v DECIMAL,
+	product_name_v VARCHAR
+)AS $$
+	BEGIN
+	RETURN QUERY
+	SELECT
+		id_local::VARCHAR AS id_local_v,
+		sale_date AS sale_date_v,
+		id_product::VARCHAR AS id_product_v,
+		quantity AS quantity_v,
+		total_amount AS total_amount_v,
+		product_name AS product_name_v
+	FROM sales_summary_daily sacc
+	WHERE (p_start_date IS NULL OR (sacc.sale_date::DATE BETWEEN p_start_date AND COALESCE(p_end_date,CURRENT_DATE)))
+	AND (p_id_local IS NULL OR p_id_local= sacc.id_local)
+	ORDER BY sacc.sale_date ASC;
+	END
+$$ LANGUAGE PLPGSQL;
+
+--SELECT* FROM list_sales_accumulate_by_day();
+
+--DROP FUNCTION list_resumen_sales_accumulate_by_day(date,date,integer)
+CREATE OR REPLACE FUNCTION rpt_list_resumen_sales_accumulate_by_day(
+	p_start_date DATE DEFAULT NULL::DATE,
+	p_end_date DATE DEFAULT NULL::DATE,
+	p_id_local INTEGER DEFAULT NULL::INTEGER
+)RETURNS TABLE (
+	id_product_v VARCHAR,
+ 	product_name_v VARCHAR,
+	average_v DECIMAL,
+	galones_v DECIMAL,
+	soles_v DECIMAL
+)AS
+$$
+	BEGIN
+		RETURN QUERY
+		SELECT
+		sacc.id_product::VARCHAR AS id_product_v,
+		sacc.product_name AS product_name_v,
+		ROUND (AVG(sacc.quantity),2) AS average_v,
+		SUM(sacc.quantity) AS galones_v,
+		SUM(sacc.totaL_amount) AS soles_v
+		FROM sales_summary_daily sacc
+		WHERE (p_start_date IS NULL OR (sacc.sale_date::DATE BETWEEN p_start_date AND COALESCE(p_end_date,CURRENT_DATE)))
+		AND (p_id_local IS NULL OR (sacc.id_local=p_id_local))
+		GROUP BY sacc.product_name,sacc.id_product;
+	END;
+$$
+LANGUAGE PLPGSQL;
+
+-- SELECT* FROM  rpt_list_resumen_sales_accumulate_by_day()
+
+--SELECT* FROM  document_report()
+--DROP FUNCTION document_report(character varying,character varying,date,date,character varying)
+
+CREATE OR REPLACE FUNCTION public.rtp_document_report(
+    p_client_name VARCHAR DEFAULT NULL::VARCHAR,
+    p_document_number VARCHAR DEFAULT NULL:: VARCHAR,
+    p_fecha_desde DATE DEFAULT NULL::DATE,
+    p_fecha_hasta DATE DEFAULT NULL::DATE,
+    p_situation VARCHAR DEFAULT NULL:: VARCHAR
+)
+RETURNS TABLE(
+	document_type VARCHAR,
+	document_number VARCHAR,
+	name_client VARCHAR,
+	discount DECIMAL,
+	total_amount DECIMAL,
+	broadcast_date DATE ,
+	situacion VARCHAR
+) AS
+$$
+BEGIN
+    RETURN QUERY
+    SELECT
+	    sdt.name AS document_type,
+		sdoc.document_number AS document_number,
+        c.first_name AS name_client,
+        s.total_discount AS discount,
+        s.total_amount AS total_amount,
+        sdoc.broadcast_date AS broadcast_date,
+		sdoc.situation AS situation
+    FROM
+        sales AS s
+    LEFT JOIN
+        client_sale AS cs ON cs.id_sales = s.id_sales
+    LEFT JOIN
+        client AS c ON c.id_client = cs.id_client
+    INNER JOIN
+        sale_document_type AS sdt ON s.document_code = sdt.document_code
+    INNER JOIN
+        sale_document AS sdoc ON sdoc.id_sales = s.id_sales
+    WHERE
+        (p_client_name IS NULL OR (c.first_name ILIKE '%' || p_client_name || '%' OR c.last_name ILIKE '%' || p_client_name || '%'))
+        AND (p_fecha_desde IS NULL OR sdoc.broadcast_date::DATE >= p_fecha_desde)
+        AND (p_fecha_hasta IS NULL OR sdoc.broadcast_date::DATE <= p_fecha_hasta)
+        AND (p_document_number IS NULL OR sdoc.document_number LIKE '%' || p_document_number || '%')
+        AND (p_situation IS NULL OR sdoc.situation = p_situation);
+END
+$$
+LANGUAGE PLPGSQL;
+-- SELECT* FROM sale_document
+
+--SELECT * FROM sales_report()
+
+CREATE OR REPLACE FUNCTION Public.rpt_sales_report(
+    local_id INTEGER DEFAULT NULL::INTEGER,
+    fecha_desde DATE DEFAULT NULL::DATE,
+    fecha_hasta DATE DEFAULT NULL::DATE
+) RETURNS TABLE (
+    date DATE,
+    document_type VARCHAR,
+    Document_number VARCHAR,
+    ruc VARCHAR,
+    client_name VARCHAR,
+    sale_valor DECIMAL,
+    tax DECIMAL,
+    total DECIMAL
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        s.date::DATE,
+        sdt.name AS document_type,
+        sd.document_number AS Document_number,
+        c.document_number AS ruc,
+        c.first_name AS client_name,
+        s.subtotal AS sale_valor,
+        s.total_tax AS tax,
+        s.total_amount AS total
+    FROM
+        sales AS s
+    LEFT JOIN
+        sale_document AS sd ON sd.id_sales = s.id_sales
+    LEFT JOIN
+        sale_document_type sdt ON sdt.document_code = s.document_code
+   	LEFT JOIN
+        client_sale AS cs ON s.id_sales = cs.id_sales
+    LEFT JOIN
+        client AS c ON cs.id_client = c.id_client
+    WHERE
+        (fecha_desde IS NULL OR s.date::DATE BETWEEN fecha_desde AND COALESCE(fecha_hasta, CURRENT_DATE))
+        AND (local_id IS NULL OR s.id_local = local_id)
+    ORDER BY date DESC;
+END
+$$ LANGUAGE PLPGSQL;
+
+-- DROP VIEW list_sale_order
+CREATE
+OR REPLACE VIEW view_list_sale_order AS
+SELECT
+    s.pos_id AS pos_v,
+    so.document_number AS document_number,
+    c.first_name AS client_v,
+	c.id_client AS id_client_v,
+    c.document_number AS document_client_v,
+    so.date AS date_v,
+    json_agg(
+        json_build_object(
+            'product',
+            p.foreign_name,
+            'quantity',
+            sd.quantity
+        )
+    ) AS sale_detail_v,
+    s.total_Amount AS total_v,
+    d.first_name AS driver_v,
+    v.vehicle_plate AS placa_v
+FROM
+    sale_order AS so
+    INNER JOIN sales AS s ON s.id_sales = so.id_sales
+    INNER JOIN client_sale AS cs ON cs.id_sales = s.id_sales
+    INNER JOIN client AS c On c.id_client = cs.id_client
+    LEFT JOIN sale_detail AS sd ON sd.id_sales = so.id_sales
+    INNER JOIN product AS p ON sd.id_product = p.id_product
+    LEFT JOIN driver_sale AS ds ON ds.id_sales = s.id_sales
+    LEFT JOIN driver AS d ON d.id_driver = ds.id_driver
+    LEFT JOIN vehicle AS v ON v.id_vehicle = ds.id_vehicle
+GROUP BY
+    so.document_number,
+    so.date,
+    s.total_Amount,
+    d.first_name,
+    v.vehicle_plate,
+    s.pos_id,
+    c.first_name,
+    c.document_number,
+	c.id_client
+ORDER BY
+    so.date ASC;
+
+
+CREATE OR REPLACE FUNCTION list_client_order_sale(
+  start_date DATE DEFAULT NULL::DATE,
+  end_date DATE DEFAULT NULL::DATE
+)
+RETURNS TABLE (
+	id_client INTEGER,
+	client VARCHAR(255),
+	document_client VARCHAR(255)
+)AS
+$$
+	BEGIN
+		RETURN QUERY
+		SELECT
+		DISTINCT
+			id_client_v AS id_client,
+			client_v AS client,
+			document_client_v AS document_client
+		FROM view_list_sale_order
+		WHERE start_date IS NULL OR date_v BETWEEN start_date AND end_date;
+
+	END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION list_detail_order_sale(
+  p_start_date DATE DEFAULT NULL::DATE,
+  p_end_date DATE DEFAULT NULL::DATE,
+  p_id_client INTEGER DEFAULT NULL::INTEGER
+)
+RETURNS TABLE (
+  id_client INTEGER,
+  client VARCHAR(255),
+  sales_per_client JSON
+) AS $$
+BEGIN
+  RETURN QUERY
+    SELECT
+      fecha.id_cliente AS id_client,
+      c.first_name AS client,
+      json_agg(
+        json_build_object(
+          'date', fecha.fecha,
+          'sales', fecha.sales_per_date
+        ) ORDER BY fecha.fecha DESC
+      ) AS sales_per_client
+    FROM
+      (SELECT
+        s.id_client_v AS id_cliente,
+        s.fecha AS fecha,
+        json_agg(
+          json_build_object(
+            'sale_document', s.document_number,
+            'sale_detail', s.sale_detail_v,
+            'total_sale', s.total_v,
+            'driver', s.driver_v,
+            'vehicle_plate', s.placa_v,
+            'date', s.fecha_hora
+          )
+        ) AS sales_per_date
+      FROM
+        (SELECT
+          s.id_client_v,
+          s.date_v::DATE AS fecha,
+          s.date_v AS fecha_hora,
+          s.document_number,
+          s.sale_detail_v,
+          s.total_v,
+          s.driver_v,
+          s.placa_v
+        FROM
+          view_list_sale_order AS s) AS s
+      GROUP BY
+        s.id_client_v,
+        s.fecha
+      ORDER BY
+        s.fecha DESC
+      ) AS fecha
+    INNER JOIN
+      client AS c ON fecha.id_cliente = c.id_client
+    WHERE (p_start_date IS NULL OR fecha.fecha BETWEEN p_start_date AND p_end_date)
+          AND (p_id_client IS NULL OR fecha.id_cliente = p_id_client)
+    GROUP BY
+      fecha.id_cliente,
+      c.first_name
+    ORDER BY
+      fecha.id_cliente;
+END;
+$$ LANGUAGE PLPGSQL;
+
+-- DROP FUNCTION list_detail_order_sale(date,date,integer)
+
+
+
+
+
 
 
