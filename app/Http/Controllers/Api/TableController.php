@@ -204,6 +204,10 @@ class TableController extends Controller
         $tenant = Tenant::whereJsonContains('data->company', $company)->first();
 
         if ($tenant) {
+
+            $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+            $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+
             $clientId = null;
 
             config(['database.connections.pgsql.database' => $tenant->tenancy_db_name]);
