@@ -65,7 +65,7 @@ Route::resource('/permissions', PermissionsController::class);
 Route::resource('/companies', CompanyController::class);
 //Route::get('/companies-users', [CompanyController::class, 'getCompaniesForCurrentUser']);
 
-Route::resource('/local', LocalController::class);
+Route::post('/local', [LocalController::class, 'index']);
 
 Route::prefix('report')->group(function () {
 

@@ -5,16 +5,25 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Tenant;
 
 class LocalController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $result = DB::select('SELECT * FROM get_locals_all_09()');
-        return $result;
+        $company = $request->input('company');
+
+        $tenant = Tenant::whereJsonContains('data->company', $company)->first();
+
+        if ($tenant) {
+            $result = DB::select('SELECT * FROM local');
+            return $result;
+        } else {
+            return response()->json(['message' => 'No se encontró el inquilino con la empresa proporcionada.'], 404);
+        }
     }
 
     /**
