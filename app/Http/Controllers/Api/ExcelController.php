@@ -150,38 +150,52 @@ class ExcelController extends Controller
             $startDate = $request->input('startDate');
             $endDate = $request->input('endDate');
             $local = $request->input('local');
+            $company = $request->input('company');
 
-            $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
-            $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+            $tenant = Tenant::whereJsonContains('data->company', $company)->first();
 
-            // Verifica si startDate y endDate están vacíos y asigna null en ese caso
-            if (empty($startDate)) {
-                $startDate = null;
+            if ($tenant) {
+
+                $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+                $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+
+                config(['database.connections.pgsql.database' => $tenant->tenancy_db_name]);
+                DB::reconnect('pgsql');
+
+                // Verifica si startDate y endDate están vacíos y asigna null en ese caso
+                if (empty($startDate)) {
+                    $startDate = null;
+                }
+                if (empty($endDate)) {
+                    $endDate = null;
+                }
+
+                $clientName = null;
+                $documenNumber = null;
+                $situation = null;
+
+                // Consulta SQL corregida
+                $contents = DB::select('SELECT * FROM rtp_document_report(?, ?, ?, ?, ?)', [$clientName, $documenNumber, $startDate, $endDate, $situation]);
+
+                //contenido
+                $data = [
+                    'title' => 'Reportes de facturas',
+                    'date' => date('d/m/Y'),
+                    'desde' => $startDate ? $startDate->format('d/m/Y') : '',
+                    'hasta' => $endDate ? $endDate->format('d/m/Y') : '',
+                    'establishment' => $local,
+                    'content' => $contents,
+                    'user' => 'usuarioTest',
+                ];
+
+                config(['database.connections.pgsql.database' => env('DB_DATABASE')]);
+                DB::reconnect('pgsql');
+
+                // Generar un archivo Excel
+                return Excel::download(new ReportInvoiceExport($data), 'invoices.xlsx');
+            } else {
+                return response()->json(['message' => 'No se encontró el inquilino con la empresa proporcionada.'], 404);
             }
-            if (empty($endDate)) {
-                $endDate = null;
-            }
-
-            $clientName = null;
-            $documenNumber = null;
-            $situation = null;
-
-            // Consulta SQL corregida
-            $contents = DB::select('SELECT * FROM rtp_document_report(?, ?, ?, ?, ?)', [$clientName, $documenNumber, $startDate, $endDate, $situation]);
-
-            //contenido
-            $data = [
-                'title' => 'Reportes de facturas',
-                'date' => date('d/m/Y'),
-                'desde' => $startDate ? $startDate->format('d/m/Y') : '',
-                'hasta' => $endDate ? $endDate->format('d/m/Y') : '',
-                'establishment' => $local,
-                'content' => $contents,
-                'user' => 'usuarioTest',
-            ];
-
-            // Generar un archivo Excel
-            return Excel::download(new ReportInvoiceExport($data), 'invoices.xlsx');
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
