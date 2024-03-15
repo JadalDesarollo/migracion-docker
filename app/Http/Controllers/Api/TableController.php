@@ -198,6 +198,7 @@ class TableController extends Controller
     {
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
+
         $company = $request->input('company');
 
         $tenant = Tenant::whereJsonContains('data->company', $company)->first();
