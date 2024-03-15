@@ -192,6 +192,30 @@ class TableController extends Controller
         } else {
             return response()->json(['message' => 'No se encontró el inquilino con la empresa proporcionada.'], 404);
         }
+    }
 
+    public function reportSaleNote(Request $request)
+    {
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $company = $request->input('company');
+
+        $tenant = Tenant::whereJsonContains('data->company', $company)->first();
+
+        if ($tenant) {
+            $clientId = null;
+
+            config(['database.connections.pgsql.database' => $tenant->tenancy_db_name]);
+            DB::reconnect('pgsql');
+
+            $result = DB::select('SELECT * FROM list_detail_order_sale(?, ?, ?)', [$startDate, $endDate, $clientId]);
+
+            config(['database.connections.pgsql.database' => env('DB_DATABASE')]);
+            DB::reconnect('pgsql');
+
+            return $result;
+        } else {
+            return response()->json(['message' => 'No se encontró el inquilino con la empresa proporcionada.'], 404);
+        }
     }
 }

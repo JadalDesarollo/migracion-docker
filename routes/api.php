@@ -80,6 +80,7 @@ Route::prefix('report')->group(function () {
         Route::post('sale', [TableController::class, 'reportSale']);
         Route::get('bank', [TableController::class, 'reportBank']);
         Route::post('invoice', [TableController::class, 'reportInvoice']);
+        Route::post('sale/note', [TableController::class, 'reportSaleNote']);
     });
 
     //reportes pdf
