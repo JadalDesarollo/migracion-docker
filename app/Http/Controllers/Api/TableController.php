@@ -103,13 +103,27 @@ class TableController extends Controller
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
         $local = $request->input('local');
+        $company = $request->input('company');
 
-        $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
-        $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+        $tenant = Tenant::whereJsonContains('data->company', $company)->first();
 
-        $result = DB::select('SELECT * FROM rpt_sales_report(?, ?, ?)', [$local, $startDate, $endDate]);
+        if ($tenant) {
 
-        return $result;
+            $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+            $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+
+            config(['database.connections.pgsql.database' => $tenant->tenancy_db_name]);
+            DB::reconnect('pgsql');
+
+            $result = DB::select('SELECT * FROM rpt_sales_report(?, ?, ?)', [$local, $startDate, $endDate]);
+
+            config(['database.connections.pgsql.database' => env('DB_DATABASE')]);
+            DB::reconnect('pgsql');
+
+            return $result;
+        } else {
+            return response()->json(['message' => 'No se encontró el inquilino con la empresa proporcionada.'], 404);
+        }
     }
 
     public function reportBank()
