@@ -19,7 +19,15 @@ class LocalController extends Controller
         $tenant = Tenant::whereJsonContains('data->company', $company)->first();
 
         if ($tenant) {
+
+            config(['database.connections.pgsql.database' => $tenant->tenancy_db_name]);
+            DB::reconnect('pgsql');
+
             $result = DB::select('SELECT * FROM local');
+
+            config(['database.connections.pgsql.database' => env('DB_DATABASE')]);
+            DB::reconnect('pgsql');
+
             return $result;
         } else {
             return response()->json(['message' => 'No se encontró el inquilino con la empresa proporcionada.'], 404);
