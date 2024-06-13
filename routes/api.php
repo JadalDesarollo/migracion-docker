@@ -12,7 +12,7 @@ use App\Http\Controllers\Api\PDFController;
 use App\Http\Controllers\Api\ExcelController;
 use App\Http\Controllers\Api\LocalController;
 use App\Http\Controllers\Api\TenantController;
-
+use App\Http\Controllers\Api\DashboardController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -109,6 +109,10 @@ Route::prefix('report')->group(function () {
         Route::post('administrative', [ExcelController::class, 'reportAdministrative']);
         Route::post('statistical', [ExcelController::class, 'reportStatistical']);
         Route::post('sale/note', [ExcelController::class, 'reportSaleNote']);
+    });
+
+    Route::prefix('dashboard')->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'dashboard']);
     });
 
     //tenant
