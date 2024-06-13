@@ -8,6 +8,7 @@ use App\Exports\InvoicesExport; // Asegúrate de importar la clase de exportaci�
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ReportDayExport;
 use App\Exports\ReportInvoiceExport;
+use App\Exports\ReportSaleNoteExport;
 use App\Exports\ReportSaleExport;
 use Illuminate\Support\Facades\DB;
 use App\Models\Establishment;
@@ -208,16 +209,22 @@ class ExcelController extends Controller
 
     public function reportSale(Request $request)
     {
-
         try {
             $startDate = $request->input('startDate');
             $endDate = $request->input('endDate');
             $local = $request->input('local');
+            $company = $request->input('company');
 
+            $tenant = Tenant::whereJsonContains('data->company', $company)->first();
+
+            if ($tenant) {
+            // Verifica si startDate y endDate están vacíos y asigna null en ese caso
             $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
             $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
 
-            // Verifica si startDate y endDate están vacíos y asigna null en ese caso
+            config(['database.connections.pgsql.database' => $tenant->tenancy_db_name]);
+            DB::reconnect('pgsql');
+
             if (empty($startDate)) {
                 $startDate = null;
             }
@@ -239,10 +246,55 @@ class ExcelController extends Controller
                 'user' => 'usuarioTest',
             ];
 
+            config(['database.connections.pgsql.database' => env('DB_DATABASE')]);
+            DB::reconnect('pgsql');
+
             // Generar un archivo Excel
             return Excel::download(new ReportSaleExport($data), 'invoices.xlsx');
+            }
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function reportSaleNote(Request $request)
+    {
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $local = $request->input('local');
+        $company = $request->input('company');
+
+        $tenant = Tenant::whereJsonContains('data->company', $company)->first();
+
+        if ($tenant) {
+
+            $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+            $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+
+            $clientId = null;
+
+            config(['database.connections.pgsql.database' => $tenant->tenancy_db_name]);
+            DB::reconnect('pgsql');
+
+            $contents = DB::select('SELECT * FROM list_detail_order_sale(?, ?, ?)', [$startDate, $endDate, $clientId]);
+
+            //contenido
+            $data = [
+                'title' => 'Reportes de nota de ventas',
+                'date' => date('d/m/Y'),
+                'desde' => $startDate ? $startDate->format('d/m/Y') : '',
+                'hasta' => $endDate ? $endDate->format('d/m/Y') : '',
+                'establishment' => $local,
+                'content' => $contents,
+                'user' => 'usuarioTest',
+            ];
+
+            config(['database.connections.pgsql.database' => env('DB_DATABASE')]);
+            DB::reconnect('pgsql');
+
+            return Excel::download(new ReportSaleNoteExport($data), 'invoices.xlsx');
+        } else {
+            return response()->json(['message' => 'No se encontró el inquilino con la empresa proporcionada.'], 404);
         }
     }
 }

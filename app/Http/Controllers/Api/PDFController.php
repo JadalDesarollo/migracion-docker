@@ -11,6 +11,7 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Svg\Tag\Rect;
 use App\Models\Tenant;
+
 class PDFController extends Controller
 {
     public function index()
@@ -73,6 +74,7 @@ class PDFController extends Controller
 
     public function reportAccumulatedDayPdf(Request $request)
     {
+        ini_set('memory_limit', '500M');
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
         $local = $request->input('local');
@@ -149,38 +151,53 @@ class PDFController extends Controller
 
     public function reportSale(Request $request)
     {
+        ini_set('memory_limit', '500M');
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
         $local = $request->input('local');
+        $company = $request->input('company');
 
-        $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
-        $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+        $tenant = Tenant::whereJsonContains('data->company', $company)->first();
 
-        // Verifica si startDate y endDate están vacíos y asigna null en ese caso
-        if (empty($startDate)) {
-            $startDate = null;
+        if ($tenant) {
+
+            $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+            $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+
+            config(['database.connections.pgsql.database' => $tenant->tenancy_db_name]);
+            DB::reconnect('pgsql');
+
+            // Verifica si startDate y endDate están vacíos y asigna null en ese caso
+            if (empty($startDate)) {
+                $startDate = null;
+            }
+            if (empty($endDate)) {
+                $endDate = null;
+            }
+
+            // Consulta SQL corregida
+            $contents = DB::select('SELECT * FROM rpt_sales_report(?, ?, ?)', [$local, $startDate, $endDate]);
+
+            //contenido
+            $data = [
+                'title' => 'Reportes de ventas',
+                'date' => date('d/m/Y'),
+                'desde' => $startDate ? $startDate->format('d/m/Y') : '',
+                'hasta' => $endDate ? $endDate->format('d/m/Y') : '',
+                'establishment' => $local,
+                'content' => $contents,
+                'user' => 'usuarioTest',
+            ];
+
+            $pdf = PDF::loadView('reportpdf.report_sale',  compact('data'));
+
+            config(['database.connections.pgsql.database' => env('DB_DATABASE')]);
+            DB::reconnect('pgsql');
+
+            return $pdf->download('reporte-sale.pdf');
+        } else {
+            return response()->json(['message' => 'No se encontró el inquilino con la empresa proporcionada.'], 404);
         }
-        if (empty($endDate)) {
-            $endDate = null;
-        }
-
-        // Consulta SQL corregida
-        $contents = DB::select('SELECT * FROM rpt_sales_report(?, ?, ?)', [$local, $startDate, $endDate]);
-
-        //contenido
-        $data = [
-            'title' => 'Reportes de ventas',
-            'date' => date('d/m/Y'),
-            'desde' => $startDate ? $startDate->format('d/m/Y') : '',
-            'hasta' => $endDate ? $endDate->format('d/m/Y') : '',
-            'establishment' => $local,
-            'content' => $contents,
-            'user' => 'usuarioTest',
-        ];
-
-        $pdf = PDF::loadView('reportpdf.report_sale',  compact('data'));
-
-        return $pdf->download('reporte-sale.pdf');
     }
 
     public function reportSaleDay()
@@ -213,7 +230,7 @@ class PDFController extends Controller
 
     public function reportInvoice(Request $request)
     {
-	ini_set('memory_limit', '500M'); // Establecer el límite de memoria a ilimitado
+        ini_set('memory_limit', '500M'); // Establecer el límite de memoria a ilimitado
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
         $local = $request->input('local');
@@ -268,6 +285,7 @@ class PDFController extends Controller
 
     public function reportAdministrative(Request $request)
     {
+        ini_set('memory_limit', '500M');
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
         $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
@@ -300,6 +318,7 @@ class PDFController extends Controller
 
     public function reportStatistical(Request $request)
     {
+        ini_set('memory_limit', '500M');
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
         $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
@@ -365,10 +384,46 @@ class PDFController extends Controller
         return $pdf->download('reporte-profitability-' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
     }
 
-    public function reportSaleNote()
+    public function reportSaleNote(Request $request)
     {
-        $pdf = PDF::loadView('reportpdf.report_sale_note');
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $local = $request->input('local');
+        $company = $request->input('company');
 
-        return $pdf->download('reporte-sale-note' . Carbon::now()->format('d-m-Y') . '-' . Carbon::now()->format('His') . '.pdf');
+        $tenant = Tenant::whereJsonContains('data->company', $company)->first();
+
+        if ($tenant) {
+
+            $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
+            $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
+
+            $clientId = null;
+
+            config(['database.connections.pgsql.database' => $tenant->tenancy_db_name]);
+            DB::reconnect('pgsql');
+
+            $contents = DB::select('SELECT * FROM list_detail_order_sale(?, ?, ?)', [$startDate, $endDate, $clientId]);
+
+            //contenido
+            $data = [
+                'title' => 'Reportes de nota de ventas',
+                'date' => date('d/m/Y'),
+                'desde' => $startDate ? $startDate->format('d/m/Y') : '',
+                'hasta' => $endDate ? $endDate->format('d/m/Y') : '',
+                'establishment' => $local,
+                'content' => $contents,
+                'user' => 'usuarioTest',
+            ];
+
+            $pdf = PDF::loadView('reportpdf.report_sale_note',  compact('data'));
+
+            config(['database.connections.pgsql.database' => env('DB_DATABASE')]);
+            DB::reconnect('pgsql');
+
+            return $pdf->download('reporte-sale.pdf');
+        } else {
+            return response()->json(['message' => 'No se encontró el inquilino con la empresa proporcionada.'], 404);
+        }
     }
 }

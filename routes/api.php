@@ -108,6 +108,7 @@ Route::prefix('report')->group(function () {
         Route::post('sale', [ExcelController::class, 'reportSale']);
         Route::post('administrative', [ExcelController::class, 'reportAdministrative']);
         Route::post('statistical', [ExcelController::class, 'reportStatistical']);
+        Route::post('sale/note', [ExcelController::class, 'reportSaleNote']);
     });
 
     //tenant
