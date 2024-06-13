@@ -213,6 +213,7 @@ class PDFController extends Controller
 
     public function reportInvoice(Request $request)
     {
+	ini_set('memory_limit', '500M'); // Establecer el límite de memoria a ilimitado
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
         $local = $request->input('local');
