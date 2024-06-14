@@ -112,7 +112,7 @@ Route::prefix('report')->group(function () {
     });
 
     Route::prefix('dashboard')->group(function () {
-        Route::get('dashboard', [DashboardController::class, 'dashboard']);
+        Route::post('dashboard', [DashboardController::class, 'dashboard']);
     });
 
     //tenant

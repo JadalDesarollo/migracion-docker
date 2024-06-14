@@ -7,7 +7,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet; // Importa la clase Worksheet
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithStyles;
 
-class ReportSaleNoteExport implements FromView, WithStyles
+class ReportSaleExport implements FromView, WithStyles
 {
     protected $data;
 
@@ -18,7 +18,7 @@ class ReportSaleNoteExport implements FromView, WithStyles
 
     public function view(): View
     {
-        return view('reportexcel.report_sale_note', [
+        return view('reportexcel.report_sale', [
             'data' => $this->data
         ]);
     }
