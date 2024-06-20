@@ -15,11 +15,10 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user_list = Permission::create(['name'=>'user.list']);
-        $user_list = Permission::create(['name'=>'users.list']);
-        $user_view = Permission::create(['name'=>'users.view']);
         $user_create = Permission::create(['name'=>'users.create']);
+        $user_list = Permission::create(['name'=>'users.list']);
         $user_update = Permission::create(['name'=>'users.update']);
+        $user_view = Permission::create(['name'=>'users.view']);
         $user_delete = Permission::create(['name'=>'users.delete']);
 
         $admin_role = Role::create(['name' => 'admin']);
