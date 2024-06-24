@@ -54,13 +54,26 @@ class RolesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Role $role)
+    public function show($id)
     {
-        $rolePermissions = $role->permissions;
-        if ($rolePermissions)
-            return sendResponse('Success', $rolePermissions);
-        else
-            return sendError('Data not found');
+        $rol = Role::with('permissions')->findOrFail($id);
+
+        $response = [
+            'rol' => [
+                'id' => $rol->id,
+                'name' => $rol->name,
+                'guard_name' => $rol->guard_name,
+                'created_at' => $rol->created_at,
+                'updated_at' => $rol->updated_at,
+            ],
+            'permissions' => $rol->permissions,
+        ];
+
+        return response()->json([
+            'success' => true,
+            'data' => 'Success',
+            'message' => $response,
+        ]);
     }
 
     /**
@@ -80,7 +93,7 @@ class RolesController extends Controller
             $role = Role::findOrFail($id);
             $validator = Validator::make($request->all(), [
                 'name' => 'required|unique:roles,name,' . $role->id,
-                'permission' => 'required|array',
+                'permissions' => 'required|array',
             ]);
 
             if ($validator->fails()) {
@@ -89,11 +102,11 @@ class RolesController extends Controller
 
             $role->update([
                 'name' => $request->input('name'),
-                'permission' => $request->input('permission'),
+                'permissions' => $request->input('permissions'),
             ]);
 
-            if ($request->has('permission')) {
-                $permissions = $request->input('permission');
+            if ($request->has('permissions')) {
+                $permissions = $request->input('permissions');
                 $role->syncPermissions($permissions);
             }
 
