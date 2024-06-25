@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Tenant;
 class ClientController extends Controller
 {
     /**
@@ -61,5 +61,32 @@ class ClientController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function list(Request $request)
+    {
+        $company = $request->input('company');
+
+        $tenant = Tenant::whereJsonContains('data->company', $company)->first();
+
+        if ($tenant) {
+
+            config(['database.connections.pgsql.database' => $tenant->tenancy_db_name]);
+            DB::reconnect('pgsql');
+
+            $list_clients = DB::select('SELECT * FROM list_clients()');
+
+            //contenido
+            $data = [
+                'clients' => $list_clients
+            ];
+
+            config(['database.connections.pgsql.database' => env('DB_DATABASE')]);
+            DB::reconnect('pgsql');
+
+            return $data;
+        } else {
+            return response()->json(['message' => 'No se encontró el inquilino con la empresa proporcionada.'], 404);
+        }
     }
 }

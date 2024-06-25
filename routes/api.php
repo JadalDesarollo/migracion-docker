@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\ExcelController;
 use App\Http\Controllers\Api\LocalController;
 use App\Http\Controllers\Api\TenantController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\ClientController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -66,6 +67,7 @@ Route::resource('/companies', CompanyController::class);
 //Route::get('/companies-users', [CompanyController::class, 'getCompaniesForCurrentUser']);
 
 Route::post('/local', [LocalController::class, 'index']);
+Route::post('/clients', [ClientController::class, 'list']);
 
 Route::prefix('report')->group(function () {
 
