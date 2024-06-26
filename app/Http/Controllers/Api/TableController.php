@@ -170,15 +170,26 @@ class TableController extends Controller
         $endDate = $request->input('endDate');
         $company = $request->input('company');
 
+        //opcionales
+        $clientName = $request->input('client');
+        $documenNumber = $request->input('document');
+        $situation = $request->input('situation');
+
+        if (empty($clientName)) {
+            $clientName = null;
+        }
+        if (empty($documenNumber)) {
+            $documenNumber = null;
+        }
+        if (empty($situation)) {
+            $situation = null;
+        }
+
         $tenant = Tenant::whereJsonContains('data->company', $company)->first();
 
         if ($tenant) {
             $startDate = \DateTime::createFromFormat('d-m-Y', $startDate);
             $endDate = \DateTime::createFromFormat('d-m-Y', $endDate);
-
-            $clientName = null;
-            $documenNumber = null;
-            $situation = null;
 
             config(['database.connections.pgsql.database' => $tenant->tenancy_db_name]);
             DB::reconnect('pgsql');
